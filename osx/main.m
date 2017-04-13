@@ -2,6 +2,21 @@
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl3.h>
 
+#include <stdio.h>
+
+@interface WindowView : NSView
+{
+}
+@end
+
+@implementation WindowView
+- (void)mouseDown:(NSEvent*)event
+{
+	NSPoint point = [event locationInWindow];
+	printf("mouse down! %f, %f\n", point.x, point.y);
+}
+@end
+
 int main(int argc, char** argv)
 {
 	[NSApplication sharedApplication];
@@ -11,6 +26,8 @@ int main(int argc, char** argv)
 	NSRect contentRect = NSMakeRect(0, 0, 1280, 720);
 	int styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
 	NSWindow* window = [[NSWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreRetained defer:NO];
+	WindowView* windowView = [[WindowView alloc] init];
+	[window setContentView:windowView];
 	[window makeKeyAndOrderFront:nil];
 
 	[NSApp activateIgnoringOtherApps:YES];
@@ -20,8 +37,9 @@ int main(int argc, char** argv)
 		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion4_1Core,
 		0
 	};
-	id pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
-	id context = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
+	NSOpenGLPixelFormat* pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+	NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
+	[pixelFormat release];
 	[context setView:[window contentView]];
 	[context makeCurrentContext];
 
@@ -34,6 +52,7 @@ int main(int argc, char** argv)
 			if(event)
 			{
 				[NSApp sendEvent:event];
+				[event release];
 			}
 			else
 			{
@@ -49,6 +68,11 @@ int main(int argc, char** argv)
 
 		frame++;
 	}
+
+	[NSOpenGLContext clearCurrentContext];
+	[context release];
+	[windowView release];
+	[window release];
 
 	return 0;
 }
