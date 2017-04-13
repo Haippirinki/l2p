@@ -23,14 +23,32 @@ int main(int argc, char** argv)
 	id pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
 	id context = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
 	[context setView:[window contentView]];
-
 	[context makeCurrentContext];
 
-	glClearColor(1.f, 0.f, 1.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	[context flushBuffer];
+	int frame = 0;
+	while(true)
+	{
+		while(true)
+		{
+			NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny untilDate:[NSDate distantPast] inMode:NSDefaultRunLoopMode dequeue:YES];
+			if(event)
+			{
+				[NSApp sendEvent:event];
+			}
+			else
+			{
+				break;
+			}
+		}
 
-	[NSApp run];
+		float r = (float)frame / 300.f;
+		glClearColor(r, 0.f, 0.f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		[context flushBuffer];
+
+		frame++;
+	}
 
 	return 0;
 }
