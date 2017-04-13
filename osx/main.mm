@@ -2,18 +2,27 @@
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl3.h>
 
-#include <stdio.h>
+#include <common/Application.h>
 
 @interface WindowView : NSView
 {
+	Application* application;
 }
+- (WindowView*)initWithApplication:(Application*)aApplication;
 @end
 
 @implementation WindowView
+- (WindowView*)initWithApplication:(Application*)aApplication
+{
+	self = [super init];
+	application = aApplication;
+	return self;
+}
+
 - (void)mouseDown:(NSEvent*)event
 {
 	NSPoint point = [event locationInWindow];
-	printf("mouse down! %f, %f\n", point.x, point.y);
+	application->mouseDown(point.x, point.y);
 }
 @end
 
@@ -26,11 +35,14 @@ int main(int argc, char** argv)
 	NSRect contentRect = NSMakeRect(0, 0, 1280, 720);
 	int styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
 	NSWindow* window = [[NSWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreRetained defer:NO];
-	WindowView* windowView = [[WindowView alloc] init];
-	[window setContentView:windowView];
 	[window makeKeyAndOrderFront:nil];
 
 	[NSApp activateIgnoringOtherApps:YES];
+
+	Application* application = new Application;
+
+	WindowView* windowView = [[WindowView alloc] initWithApplication:application];
+	[window setContentView:windowView];
 
 	NSOpenGLPixelFormatAttribute attributes[] = {
 		NSOpenGLPFADoubleBuffer,
@@ -43,7 +55,6 @@ int main(int argc, char** argv)
 	[context setView:[window contentView]];
 	[context makeCurrentContext];
 
-	int frame = 0;
 	while(true)
 	{
 		while(true)
@@ -60,14 +71,12 @@ int main(int argc, char** argv)
 			}
 		}
 
-		float r = (float)frame / 300.f;
-		glClearColor(r, 0.f, 0.f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
+		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
+		application->update((int)contentRect.size.width, (int)contentRect.size.height);
 		[context flushBuffer];
-
-		frame++;
 	}
+
+	delete application;
 
 	[NSOpenGLContext clearCurrentContext];
 	[context release];
