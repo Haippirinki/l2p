@@ -4,14 +4,33 @@
 
 #include <common/Application.h>
 
+bool g_shouldExit = false;
+
+@interface WindowDelegate : NSObject <NSWindowDelegate>
+{
+}
+@end
+
+@implementation WindowDelegate
+
+- (void)windowWillClose:(NSNotification*)notification
+{
+	g_shouldExit = true;
+}
+
+@end
+
 @interface WindowView : NSView
 {
 	Application* application;
 }
+
 - (WindowView*)initWithApplication:(Application*)aApplication;
+
 @end
 
 @implementation WindowView
+
 - (WindowView*)initWithApplication:(Application*)aApplication
 {
 	self = [super init];
@@ -24,6 +43,7 @@
 	NSPoint point = [event locationInWindow];
 	application->mouseDown(point.x, point.y);
 }
+
 @end
 
 int main(int argc, char** argv)
@@ -41,6 +61,9 @@ int main(int argc, char** argv)
 
 	Application* application = new Application;
 
+	WindowDelegate* windowDelegate = [[WindowDelegate alloc] init];
+	[window setDelegate:windowDelegate];
+
 	WindowView* windowView = [[WindowView alloc] initWithApplication:application];
 	[window setContentView:windowView];
 
@@ -55,9 +78,13 @@ int main(int argc, char** argv)
 	[context setView:[window contentView]];
 	[context makeCurrentContext];
 
-	while(true)
+	while(!g_shouldExit)
 	{
-		while(true)
+		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
+		application->update((int)contentRect.size.width, (int)contentRect.size.height);
+		[context flushBuffer];
+
+		while(!g_shouldExit)
 		{
 			NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny untilDate:[NSDate distantPast] inMode:NSDefaultRunLoopMode dequeue:YES];
 			if(event)
@@ -70,10 +97,6 @@ int main(int argc, char** argv)
 				break;
 			}
 		}
-
-		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
-		application->update((int)contentRect.size.width, (int)contentRect.size.height);
-		[context flushBuffer];
 	}
 
 	delete application;
@@ -81,6 +104,7 @@ int main(int argc, char** argv)
 	[NSOpenGLContext clearCurrentContext];
 	[context release];
 	[windowView release];
+	[windowDelegate release];
 	[window release];
 
 	return 0;
