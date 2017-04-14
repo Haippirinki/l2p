@@ -2,16 +2,20 @@
 #import <GLKit/GLKit.h>
 #import <QuartzCore/QuartzCore.h>
 
+#include "Application.h"
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GLKViewDelegate>
-@property (strong, nonatomic) UIWindow *window;
+{
+    Application* myApplication;
+}
+@property (strong, nonatomic) UIWindow* window;
 @end
 
 @implementation AppDelegate
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClearColor(1.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    myApplication->update((int)rect.size.width, (int)rect.size.height);
 }
 
 - (void)render:(CADisplayLink*)displayLink
@@ -39,6 +43,8 @@
     
     [self.window makeKeyAndVisible];
     
+    myApplication = new Application;
+
     return YES;
 }
 

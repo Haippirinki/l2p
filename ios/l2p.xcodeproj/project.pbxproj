@@ -7,12 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0FF458D61EA141C0004FAC7E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF458D51EA141C0004FAC7E /* main.m */; };
+		0F300D481EA146400059AA40 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F300D461EA146400059AA40 /* Application.cpp */; };
+		0F300D4B1EA14A640059AA40 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4A1EA14A640059AA40 /* UIKit.framework */; };
+		0F300D4D1EA14A6A0059AA40 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4C1EA14A6A0059AA40 /* GLKit.framework */; };
+		0F300D4F1EA14A7F0059AA40 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4E1EA14A7F0059AA40 /* QuartzCore.framework */; };
+		0F300D511EA14A910059AA40 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D501EA14A910059AA40 /* OpenGLES.framework */; };
+		0FF458D61EA141C0004FAC7E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0FF458D51EA141C0004FAC7E /* main.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0F0C09591EA140AB003F09DB /* l2p.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = l2p.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0FF458D51EA141C0004FAC7E /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
+		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; };
+		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; };
+		0F300D4A1EA14A640059AA40 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0F300D4C1EA14A6A0059AA40 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		0F300D4E1EA14A7F0059AA40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0F300D501EA14A910059AA40 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		0FF458D51EA141C0004FAC7E /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = main.mm; sourceTree = SOURCE_ROOT; };
 		0FF458D81EA14278004FAC7E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -21,6 +32,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F300D511EA14A910059AA40 /* OpenGLES.framework in Frameworks */,
+				0F300D4F1EA14A7F0059AA40 /* QuartzCore.framework in Frameworks */,
+				0F300D4D1EA14A6A0059AA40 /* GLKit.framework in Frameworks */,
+				0F300D4B1EA14A640059AA40 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -30,8 +45,10 @@
 		0F0C09501EA140AB003F09DB = {
 			isa = PBXGroup;
 			children = (
+				0F300D451EA146210059AA40 /* common */,
 				0FF458D71EA1423D004FAC7E /* ios */,
 				0F0C095A1EA140AB003F09DB /* Products */,
+				0F300D491EA14A630059AA40 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -43,11 +60,31 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0F300D451EA146210059AA40 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				0F300D461EA146400059AA40 /* Application.cpp */,
+				0F300D471EA146400059AA40 /* Application.h */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		0F300D491EA14A630059AA40 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0F300D501EA14A910059AA40 /* OpenGLES.framework */,
+				0F300D4E1EA14A7F0059AA40 /* QuartzCore.framework */,
+				0F300D4C1EA14A6A0059AA40 /* GLKit.framework */,
+				0F300D4A1EA14A640059AA40 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0FF458D71EA1423D004FAC7E /* ios */ = {
 			isa = PBXGroup;
 			children = (
 				0FF458D81EA14278004FAC7E /* Info.plist */,
-				0FF458D51EA141C0004FAC7E /* main.m */,
+				0FF458D51EA141C0004FAC7E /* main.mm */,
 			);
 			name = ios;
 			path = l2p;
@@ -122,7 +159,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FF458D61EA141C0004FAC7E /* main.m in Sources */,
+				0F300D481EA146400059AA40 /* Application.cpp in Sources */,
+				0FF458D61EA141C0004FAC7E /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
