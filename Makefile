@@ -1,5 +1,7 @@
-SOURCES = osx/main.mm common/Application.cpp
+SOURCES = $(wildcard common/*.cpp)
+SOURCES += osx/main.mm
 
+CXXFLAGS = -std=c++11
 INCLUDE = -I.
 FRAMEWORKS = -framework AppKit -framework OpenGL
 
@@ -11,8 +13,8 @@ build/l2p: $(OBJS) Makefile
 
 build/%.o: %.mm Makefile
 	@mkdir -p $(@D)
-	clang++ -c -o $@ $(INCLUDE) $<
+	clang++ -c -o $@ $(CXXFLAGS) $(INCLUDE) $<
 
 build/%.o: %.cpp Makefile
 	@mkdir -p $(@D)
-	clang++ -c -o $@ $(INCLUDE) $<
+	clang++ -c -o $@ $(CXXFLAGS) $(INCLUDE) $<

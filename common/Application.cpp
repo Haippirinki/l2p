@@ -1,16 +1,14 @@
 #include "Application.h"
+#include "OpenGL.h"
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES3/gl.h>
-#else
-#include <OpenGL/gl3.h>
-#endif
-#endif
+#include "GameState.h"
+#include "MenuState.h"
 
 Application::Application()
 {
+	m_stateMachine.addState("game", new GameState);
+	m_stateMachine.addState("menu", new MenuState);
+	m_stateMachine.requestState("menu");
 }
 
 Application::~Application()
@@ -19,11 +17,11 @@ Application::~Application()
 
 void Application::update(int width, int height)
 {
-	glViewport(0, 0, width, height);
-	glClearColor(0.f, 0.f, 0.f, 0.f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	m_stateMachine.update(0.0, 0.0);
+	m_stateMachine.render();
 }
 
 void Application::mouseDown(float x, float y)
 {
+	m_stateMachine.mouseDown(x, y);
 }
