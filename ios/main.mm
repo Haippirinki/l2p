@@ -48,6 +48,25 @@
     return YES;
 }
 
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+    CGPoint location = [touch locationInView:touch.view];
+    myApplication->mouseDown(location.x, location.y);
+}
+
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
+{
+}
+
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
+{
+}
+
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
+{
+}
+
 @end
 
 int main(int argc, char * argv[])
