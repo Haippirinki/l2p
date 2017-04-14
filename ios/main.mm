@@ -6,53 +6,53 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GLKViewDelegate>
 {
-    Application* myApplication;
+	Application* myApplication;
 }
 @property (strong, nonatomic) UIWindow* window;
 @end
 
 @implementation AppDelegate
 
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+- (void)glkView:(GLKView*)view drawInRect:(CGRect)rect
 {
-    myApplication->update((int)rect.size.width, (int)rect.size.height);
+	myApplication->update((int)rect.size.width, (int)rect.size.height);
 }
 
 - (void)render:(CADisplayLink*)displayLink
 {
-    GLKView* view = [self.window.subviews objectAtIndex:0];
-    [view display];
+	GLKView* view = [self.window.subviews objectAtIndex:0];
+	[view display];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    GLKView* view = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    view.context = context;
-    view.delegate = (id)self;
-    view.enableSetNeedsDisplay = NO;
-    
-    CADisplayLink* displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    
-    UIViewController* controller = [[UIViewController alloc] init];
-    controller.view = view;
-    [self.window setRootViewController:controller];
-    
-    [self.window makeKeyAndVisible];
-    
-    myApplication = new Application;
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	
+	EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+	GLKView* view = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	view.context = context;
+	view.delegate = (id)self;
+	view.enableSetNeedsDisplay = NO;
+	
+	CADisplayLink* displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
+	[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+	
+	UIViewController* controller = [[UIViewController alloc] init];
+	controller.view = view;
+	[self.window setRootViewController:controller];
+	
+	[self.window makeKeyAndVisible];
+	
+	myApplication = new Application;
 
-    return YES;
+	return YES;
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
-    UITouch* touch = [touches anyObject];
-    CGPoint location = [touch locationInView:touch.view];
-    myApplication->mouseDown(location.x, location.y);
+	UITouch* touch = [touches anyObject];
+	CGPoint location = [touch locationInView:touch.view];
+	myApplication->mouseDown(location.x, location.y);
 }
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
@@ -69,10 +69,10 @@
 
 @end
 
-int main(int argc, char * argv[])
+int main(int argc, char** argv)
 {
-    @autoreleasepool
-    {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-    }
+	@autoreleasepool
+	{
+		return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+	}
 }

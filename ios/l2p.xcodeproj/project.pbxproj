@@ -17,13 +17,13 @@
 
 /* Begin PBXFileReference section */
 		0F0C09591EA140AB003F09DB /* l2p.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = l2p.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; };
-		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; };
+		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; usesTabs = 1; };
+		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; usesTabs = 1; };
 		0F300D4A1EA14A640059AA40 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0F300D4C1EA14A6A0059AA40 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		0F300D4E1EA14A7F0059AA40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0F300D501EA14A910059AA40 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		0FF458D51EA141C0004FAC7E /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = main.mm; sourceTree = SOURCE_ROOT; };
+		0FF458D51EA141C0004FAC7E /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = main.mm; sourceTree = SOURCE_ROOT; usesTabs = 1; };
 		0FF458D81EA14278004FAC7E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
