@@ -4,6 +4,8 @@
 
 #include "Application.h"
 
+#include <unistd.h>
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GLKViewDelegate>
 {
 	Application* myApplication;
@@ -28,7 +30,7 @@
 {
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	
-	EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+	EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
 	GLKView* view = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	view.context = context;
 	view.delegate = (id)self;
@@ -73,6 +75,8 @@ int main(int argc, char** argv)
 {
 	@autoreleasepool
 	{
+		chdir([[[NSBundle mainBundle] resourcePath] UTF8String]);
+
 		return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
 	}
 }
