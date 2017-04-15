@@ -16,13 +16,14 @@
 		0F5B322E1EA170E400266FA6 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B32291EA170E400266FA6 /* State.cpp */; };
 		0F5B322F1EA170E400266FA6 /* StateMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B322B1EA170E400266FA6 /* StateMachine.cpp */; };
 		0F5B32321EA1719300266FA6 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B32301EA1719300266FA6 /* GameState.cpp */; };
+		0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FA0A2691EA2058A00D85832 /* File.cpp */; };
 		0FF458D61EA141C0004FAC7E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0FF458D51EA141C0004FAC7E /* main.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0F0C09591EA140AB003F09DB /* l2p.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = l2p.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; usesTabs = 1; };
-		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; usesTabs = 1; };
+		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; usesTabs = 1; };
+		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; usesTabs = 1; };
 		0F300D4A1EA14A640059AA40 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0F300D4C1EA14A6A0059AA40 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		0F300D4E1EA14A7F0059AA40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -36,6 +37,8 @@
 		0F5B322C1EA170E400266FA6 /* StateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateMachine.h; path = ../common/StateMachine.h; sourceTree = "<group>"; };
 		0F5B32301EA1719300266FA6 /* GameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameState.cpp; path = ../common/GameState.cpp; sourceTree = "<group>"; };
 		0F5B32311EA1719300266FA6 /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameState.h; path = ../common/GameState.h; sourceTree = "<group>"; };
+		0FA0A2691EA2058A00D85832 /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = File.cpp; path = ../common/File.cpp; sourceTree = "<group>"; };
+		0FA0A26A1EA2058A00D85832 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = File.h; path = ../common/File.h; sourceTree = "<group>"; };
 		0FF458D51EA141C0004FAC7E /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = main.mm; sourceTree = SOURCE_ROOT; usesTabs = 1; };
 		0FF458D81EA14278004FAC7E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -76,6 +79,8 @@
 		0F300D451EA146210059AA40 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0FA0A2691EA2058A00D85832 /* File.cpp */,
+				0FA0A26A1EA2058A00D85832 /* File.h */,
 				0F5B32301EA1719300266FA6 /* GameState.cpp */,
 				0F5B32311EA1719300266FA6 /* GameState.h */,
 				0F5B32261EA170E400266FA6 /* MenuState.cpp */,
@@ -187,6 +192,7 @@
 				0F5B322D1EA170E400266FA6 /* MenuState.cpp in Sources */,
 				0FF458D61EA141C0004FAC7E /* main.mm in Sources */,
 				0F5B322E1EA170E400266FA6 /* State.cpp in Sources */,
+				0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
