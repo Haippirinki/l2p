@@ -11,7 +11,7 @@ public:
 	StateMachine();
 	~StateMachine();
 
-	void update(int width, int height, double t, double dt);
+	void update(float width, float height, double t, double dt);
 	void render(int width, int height);
 
 	void addState(const std::string& name, State* state);
@@ -20,8 +20,8 @@ public:
 	double getTime() const { return m_t; }
 	double getDeltaTime() const { return m_dt; }
 
-	int getWindowWidth() const { return m_windowWidth; }
-	int getWindowHeight() const { return m_windowHeight; }
+	float getWindowWidth() const { return m_windowWidth; }
+	float getWindowHeight() const { return m_windowHeight; }
 
 	int getFramebufferWidth() const { return m_framebufferWidth; }
 	int getFramebufferHeight() const { return m_framebufferHeight; }
@@ -34,8 +34,8 @@ private:
 	State* m_activeState;
 	double m_t;
 	double m_dt;
-	int m_windowWidth;
-	int m_windowHeight;
+	float m_windowWidth;
+	float m_windowHeight;
 	int m_framebufferWidth;
 	int m_framebufferHeight;
 };

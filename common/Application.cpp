@@ -15,7 +15,7 @@ Application::~Application()
 {
 }
 
-void Application::update(int width, int height)
+void Application::update(float width, float height)
 {
 	m_stateMachine.update(width, height, 0.0, 0.0);
 }

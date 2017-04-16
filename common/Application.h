@@ -8,7 +8,7 @@ public:
 	Application();
 	~Application();
 
-	void update(int width, int height);
+	void update(float width, float height);
 	void render(int width, int height);
 
 	void mouseDown(float x, float y);
