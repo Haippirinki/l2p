@@ -17,7 +17,7 @@ Application::~Application()
 
 void Application::update(int width, int height)
 {
-	m_stateMachine.update(0.0, 0.0);
+	m_stateMachine.update(width, height, 0.0, 0.0);
 	m_stateMachine.render();
 }
 

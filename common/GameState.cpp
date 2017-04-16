@@ -112,6 +112,7 @@ void GameState::update(StateMachine* stateMachine)
 
 void GameState::render(StateMachine* stateMachine)
 {
+	glViewport(0, 0, stateMachine->getWidth(), stateMachine->getHeight());
 	glClearColor(0.f, 0.f, 1.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

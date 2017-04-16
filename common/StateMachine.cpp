@@ -1,7 +1,7 @@
 #include "StateMachine.h"
 #include "State.h"
 
-StateMachine::StateMachine() : m_activeState(nullptr)
+StateMachine::StateMachine() : m_activeState(nullptr), m_t(0.0), m_dt(0.0), m_width(0), m_height(0)
 {
 }
 
@@ -9,8 +9,10 @@ StateMachine::~StateMachine()
 {
 }
 
-void StateMachine::update(double t, double dt)
+void StateMachine::update(int width, int height, double t, double dt)
 {
+	m_width = width;
+	m_height = height;
 	m_t = t;
 	m_dt = dt;
 
