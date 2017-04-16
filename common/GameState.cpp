@@ -64,6 +64,8 @@ static GLuint createProgram(GLuint vs, GLuint fs)
 struct GameState::PrivateData
 {
 	GLuint shaderProgram;
+	GLuint vertexArray;
+	GLuint vertexBuffer;
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -84,6 +86,20 @@ void GameState::enter(StateMachine* stateMachine)
 	GLuint fs = createShader(GL_FRAGMENT_SHADER, fsFile.getData(), fsFile.getSize());
 
 	m->shaderProgram = createProgram(vs, fs);
+
+	glGenVertexArrays(1, &m->vertexArray);
+	glBindVertexArray(m->vertexArray);
+
+	const float w = 0.5f;
+	const float h = 0.5f;
+	float vertices[] = { -w, -h, w, -h, w, h, w, h, -w, h, -w, -h };
+
+	glGenBuffers(1, &m->vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void GameState::leave(StateMachine* stateMachine)
@@ -97,7 +113,12 @@ void GameState::update(StateMachine* stateMachine)
 void GameState::render(StateMachine* stateMachine)
 {
 	glClearColor(0.f, 0.f, 1.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUseProgram(m->shaderProgram);
+	glBindVertexArray(m->vertexArray);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
