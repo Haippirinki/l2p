@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include "DDSLoader.h"
 #include "File.h"
 #include "OpenGL.h"
 #include "StateMachine.h"
@@ -64,8 +65,15 @@ static GLuint createProgram(GLuint vs, GLuint fs)
 struct GameState::PrivateData
 {
 	GLuint shaderProgram;
+
+	GLuint fontTexture;
+	size_t fontTextureWidth;
+	size_t fontTextureHeight;
+	size_t fontTextureDepth;
+	GLenum fontTextureBindTarget;
+
 	GLuint vertexArray;
-	GLuint vertexBuffer;
+	GLuint vertexBuffer[2];
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -86,6 +94,11 @@ void GameState::enter(StateMachine* stateMachine)
 	GLuint fs = createShader(GL_FRAGMENT_SHADER, fsFile.getData(), fsFile.getSize());
 
 	m->shaderProgram = createProgram(vs, fs);
+	glUseProgram(m->shaderProgram);
+	glUniform1i(glGetUniformLocation(m->shaderProgram, "u_sampler"), 0);
+
+	File fontTextureFile("assets/fonts/eurostile_extended_18px_0.dds");
+	m->fontTexture = loadDDS(fontTextureFile.getData(), fontTextureFile.getSize(), true, m->fontTextureWidth, m->fontTextureHeight, m->fontTextureDepth, m->fontTextureBindTarget);
 
 	glGenVertexArrays(1, &m->vertexArray);
 	glBindVertexArray(m->vertexArray);
@@ -93,13 +106,19 @@ void GameState::enter(StateMachine* stateMachine)
 	const float w = 0.5f;
 	const float h = 0.5f;
 	float vertices[] = { -w, -h, w, -h, w, h, w, h, -w, h, -w, -h };
+	float uvs[] = { 0.f, 0.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.f };
 
-	glGenBuffers(1, &m->vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer);
+	glGenBuffers(2, m->vertexBuffer);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
 }
 
 void GameState::leave(StateMachine* stateMachine)
@@ -117,6 +136,10 @@ void GameState::render(StateMachine* stateMachine)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m->shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(m->fontTextureBindTarget, m->fontTexture);
+
 	glBindVertexArray(m->vertexArray);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
