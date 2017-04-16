@@ -44,6 +44,7 @@ bool g_shouldExit = false;
 - (WindowView*)initWithApplication:(Application*)aApplication
 {
 	self = [super init];
+	[self setWantsBestResolutionOpenGLSurface:YES];
 	application = aApplication;
 	return self;
 }
@@ -62,7 +63,7 @@ int main(int argc, char** argv)
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 	[NSApp finishLaunching];
 
-	NSRect contentRect = NSMakeRect(0, 0, 600, 600);
+	NSRect contentRect = NSMakeRect(0, 0, 1280, 720);
 	int styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
 	NSWindow* window = [[NSWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
 	[window makeKeyAndOrderFront:nil];
@@ -92,6 +93,9 @@ int main(int argc, char** argv)
 	{
 		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
 		application->update((int)contentRect.size.width, (int)contentRect.size.height);
+
+		NSRect backingRect = [windowView convertRectToBacking:contentRect];
+		application->render((int)backingRect.size.width, (int)backingRect.size.height);
 		[context flushBuffer];
 
 		while(!g_shouldExit)

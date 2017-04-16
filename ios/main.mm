@@ -18,6 +18,7 @@
 - (void)glkView:(GLKView*)view drawInRect:(CGRect)rect
 {
 	myApplication->update((int)rect.size.width, (int)rect.size.height);
+	myApplication->render((int)view.drawableWidth, (int)view.drawableHeight);
 }
 
 - (void)render:(CADisplayLink*)displayLink

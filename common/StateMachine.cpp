@@ -1,7 +1,7 @@
 #include "StateMachine.h"
 #include "State.h"
 
-StateMachine::StateMachine() : m_activeState(nullptr), m_t(0.0), m_dt(0.0), m_width(0), m_height(0)
+StateMachine::StateMachine() : m_activeState(nullptr), m_t(0.0), m_dt(0.0), m_windowWidth(0), m_windowHeight(0), m_framebufferWidth(0), m_framebufferHeight(0)
 {
 }
 
@@ -11,8 +11,8 @@ StateMachine::~StateMachine()
 
 void StateMachine::update(int width, int height, double t, double dt)
 {
-	m_width = width;
-	m_height = height;
+	m_windowWidth = width;
+	m_windowHeight = height;
 	m_t = t;
 	m_dt = dt;
 
@@ -31,8 +31,10 @@ void StateMachine::update(int width, int height, double t, double dt)
 	m_activeState->update(this);
 }
 
-void StateMachine::render()
+void StateMachine::render(int width, int height)
 {
+	m_framebufferWidth = width;
+	m_framebufferHeight = height;
 	m_activeState->render(this);
 }
 

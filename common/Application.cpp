@@ -18,7 +18,11 @@ Application::~Application()
 void Application::update(int width, int height)
 {
 	m_stateMachine.update(width, height, 0.0, 0.0);
-	m_stateMachine.render();
+}
+
+void Application::render(int width, int height)
+{
+	m_stateMachine.render(width, height);
 }
 
 void Application::mouseDown(float x, float y)
