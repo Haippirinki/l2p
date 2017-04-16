@@ -52,7 +52,7 @@ bool g_shouldExit = false;
 - (void)mouseDown:(NSEvent*)event
 {
 	NSPoint point = [event locationInWindow];
-	application->mouseDown(point.x, point.y);
+	application->mouseDown(point.x, self.bounds.size.height - point.y);
 }
 
 @end
