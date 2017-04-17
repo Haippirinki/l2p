@@ -4,11 +4,8 @@
 #include "GameState.h"
 #include "MenuState.h"
 
-Application::Application()
+Application::Application() : m_initialized(false)
 {
-	m_stateMachine.addState("game", new GameState);
-	m_stateMachine.addState("menu", new MenuState);
-	m_stateMachine.requestState("menu");
 }
 
 Application::~Application()
@@ -17,6 +14,14 @@ Application::~Application()
 
 void Application::update(float width, float height)
 {
+	if(!m_initialized)
+	{
+		m_stateMachine.addState("game", new GameState);
+		m_stateMachine.addState("menu", new MenuState);
+		m_stateMachine.requestState("menu");
+		m_initialized = true;
+	}
+
 	m_stateMachine.update(width, height, 0.0, 0.0);
 }
 

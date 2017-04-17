@@ -78,15 +78,6 @@ struct GameState::PrivateData
 
 GameState::GameState() : m(new PrivateData)
 {
-}
-
-GameState::~GameState()
-{
-	delete m;
-}
-
-void GameState::enter(StateMachine* stateMachine)
-{
 	File vsFile("assets/shaders/basic.vs");
 	GLuint vs = createShader(GL_VERTEX_SHADER, vsFile.getData(), vsFile.getSize());
 
@@ -119,6 +110,15 @@ void GameState::enter(StateMachine* stateMachine)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
+}
+
+GameState::~GameState()
+{
+	delete m;
+}
+
+void GameState::enter(StateMachine* stateMachine)
+{
 }
 
 void GameState::leave(StateMachine* stateMachine)

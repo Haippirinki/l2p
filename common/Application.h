@@ -14,5 +14,6 @@ public:
 	void mouseDown(float x, float y);
 
 private:
+	bool m_initialized;
 	StateMachine m_stateMachine;
 };
