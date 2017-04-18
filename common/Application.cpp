@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "MenuState.h"
+#include "TestState.h"
 
 Application::Application() : m_initialized(false)
 {
@@ -18,7 +19,8 @@ void Application::update(float width, float height)
 	{
 		m_stateMachine.addState("game", new GameState);
 		m_stateMachine.addState("menu", new MenuState);
-		m_stateMachine.requestState("menu");
+		m_stateMachine.addState("test", new TestState);
+		m_stateMachine.requestState("game");
 		m_initialized = true;
 	}
 

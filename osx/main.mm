@@ -89,6 +89,8 @@ int main(int argc, char** argv)
 	[context setView:[window contentView]];
 	[context makeCurrentContext];
 
+	glEnable(GL_FRAMEBUFFER_SRGB);
+
 	while(!g_shouldExit)
 	{
 		NSRect contentRect = [window contentRectForFrameRect:[window frame]];

@@ -36,6 +36,7 @@
 	view.context = context;
 	view.delegate = (id)self;
 	view.enableSetNeedsDisplay = NO;
+	view.drawableColorFormat = GLKViewDrawableColorFormatSRGBA8888;
 	
 	CADisplayLink* displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
 	[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
