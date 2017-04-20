@@ -27,6 +27,8 @@ public:
 	int getFramebufferHeight() const { return m_framebufferHeight; }
 
 	void mouseDown(float x, float y);
+	void mouseUp(float x, float y);
+	void mouseMove(float x, float y);
 
 private:
 	std::map<std::string, State*> m_state;

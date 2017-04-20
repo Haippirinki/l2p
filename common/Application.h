@@ -12,6 +12,8 @@ public:
 	void render(int width, int height);
 
 	void mouseDown(float x, float y);
+	void mouseUp(float x, float y);
+	void mouseMove(float x, float y);
 
 private:
 	bool m_initialized;

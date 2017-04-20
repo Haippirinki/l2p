@@ -55,6 +55,18 @@ bool g_shouldExit = false;
 	application->mouseDown(point.x, self.bounds.size.height - point.y);
 }
 
+- (void)mouseUp:(NSEvent*)event
+{
+	NSPoint point = [event locationInWindow];
+	application->mouseUp(point.x, self.bounds.size.height - point.y);
+}
+
+- (void)mouseDragged:(NSEvent*)event
+{
+	NSPoint point = [event locationInWindow];
+	application->mouseMove(point.x, self.bounds.size.height - point.y);
+}
+
 @end
 
 int main(int argc, char** argv)

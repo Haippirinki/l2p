@@ -36,3 +36,13 @@ void Application::mouseDown(float x, float y)
 {
 	m_stateMachine.mouseDown(x, y);
 }
+
+void Application::mouseUp(float x, float y)
+{
+	m_stateMachine.mouseUp(x, y);
+}
+
+void Application::mouseMove(float x, float y)
+{
+	m_stateMachine.mouseMove(x, y);
+}

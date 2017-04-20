@@ -14,4 +14,6 @@ public:
 	virtual void render(StateMachine* stateMachine) = 0;
 
 	virtual void mouseDown(StateMachine* stateMachine, float x, float y) = 0;
+	virtual void mouseUp(StateMachine* stateMachine, float x, float y) = 0;
+	virtual void mouseMove(StateMachine* stateMachine, float x, float y) = 0;
 };

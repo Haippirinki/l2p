@@ -61,14 +61,23 @@
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
+	UITouch* touch = [touches anyObject];
+	CGPoint location = [touch locationInView:touch.view];
+	myApplication->mouseUp(location.x, location.y);
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
+	UITouch* touch = [touches anyObject];
+	CGPoint location = [touch locationInView:touch.view];
+	myApplication->mouseMove(location.x, location.y);
 }
 
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
 {
+	UITouch* touch = [touches anyObject];
+	CGPoint location = [touch locationInView:touch.view];
+	myApplication->mouseUp(location.x, location.y);
 }
 
 @end

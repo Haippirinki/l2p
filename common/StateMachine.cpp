@@ -55,3 +55,19 @@ void StateMachine::mouseDown(float x, float y)
 		m_activeState->mouseDown(this, x, y);
 	}
 }
+
+void StateMachine::mouseUp(float x, float y)
+{
+	if(m_activeState)
+	{
+		m_activeState->mouseUp(this, x, y);
+	}
+}
+
+void StateMachine::mouseMove(float x, float y)
+{
+	if(m_activeState)
+	{
+		m_activeState->mouseMove(this, x, y);
+	}
+}

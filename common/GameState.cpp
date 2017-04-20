@@ -205,3 +205,11 @@ void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
 {
 	stateMachine->requestState("test");
 }
+
+void GameState::mouseUp(StateMachine* stateMachine, float x, float y)
+{
+}
+
+void GameState::mouseMove(StateMachine* stateMachine, float x, float y)
+{
+}

@@ -24,3 +24,11 @@ void MenuState::mouseDown(StateMachine* stateMachine, float x, float y)
 {
 	stateMachine->requestState("game");
 }
+
+void MenuState::mouseUp(StateMachine* stateMachine, float x, float y)
+{
+}
+
+void MenuState::mouseMove(StateMachine* stateMachine, float x, float y)
+{
+}

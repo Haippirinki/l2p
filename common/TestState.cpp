@@ -149,3 +149,11 @@ void TestState::mouseDown(StateMachine* stateMachine, float x, float y)
 {
 	stateMachine->requestState("menu");
 }
+
+void TestState::mouseUp(StateMachine* stateMachine, float x, float y)
+{
+}
+
+void TestState::mouseMove(StateMachine* stateMachine, float x, float y)
+{
+}
