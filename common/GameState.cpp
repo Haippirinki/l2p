@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstring>
+#include <list>
 #include <vector>
 
 #ifdef __APPLE__
@@ -162,17 +163,40 @@ class Game
 public:
 	Game() : m_playerPosition(vec2::zero), m_playerVelocity(vec2::zero), m_playerControl(vec2::zero)
 	{
+		for(int i = 0; i < 30; i++)
+		{
+			float t = float(i);
+			float r = 3.f + t * 0.5f;
+			m_enemies.push_back( { { cosf(t) * r, sinf(t) * r }, 1.f, { 0.f, 0.f, 1.f, 1.f } } );
+		}
 	}
 
 	void update(float dt)
 	{
 		m_playerVelocity = m_playerControl;
 		m_playerPosition += m_playerVelocity * dt;
+
+		for(std::list<Enemy>::iterator it = m_enemies.begin(); it != m_enemies.end();)
+		{
+			if(!it->update(dt))
+			{
+				it = m_enemies.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 
-	void render(Batcher& batcher)
+	void render(Batcher& batcher) const
 	{
 		batcher.addCircle(m_playerPosition, 0.05f, { 1.f, 0.f, 0.f, 1.f } );
+
+		for(std::list<Enemy>::const_iterator it = m_enemies.begin(); it != m_enemies.end(); ++it)
+		{
+			it->render(batcher);
+		}
 	}
 
 	void setControl(const vec2& control)
@@ -184,6 +208,31 @@ private:
 	vec2 m_playerPosition;
 	vec2 m_playerVelocity;
 	vec2 m_playerControl;
+
+	struct Enemy
+	{
+		bool update(float dt)
+		{
+			if(length(m_position) < m_speed * dt)
+			{
+				return false;
+			}
+
+			m_position -= normalize(m_position) * (m_speed * dt);
+			return true;
+		}
+
+		void render(Batcher& batcher) const
+		{
+			batcher.addCircle(m_position, 0.05f, m_color );
+		}
+
+		vec2 m_position;
+		float m_speed;
+		vec4 m_color;
+	};
+
+	std::list<Enemy> m_enemies;
 };
 
 struct GameState::PrivateData
