@@ -161,7 +161,7 @@ private:
 class Game
 {
 public:
-	Game() : m_playerPosition(vec2::zero), m_playerVelocity(vec2::zero), m_playerControl(vec2::zero)
+	Game() : m_playerPosition(vec2::zero), m_playerVelocity(vec2::zero), m_playerControl(vec2::zero), m_playerRadius(0.05f)
 	{
 		for(int i = 0; i < 300; i++)
 		{
@@ -169,11 +169,11 @@ public:
 			float r = 3.f + t * 0.25f;
 			float a = 3.7f * t;
 			float s = 1.f + 0.5f * sinf(t);
-			m_enemies.push_back( { { cosf(a) * r, sinf(a) * r }, s, { 0.f, s - 0.5f, 1.f, 1.f } } );
+			m_enemies.push_back( { { cosf(a) * r, sinf(a) * r }, s, 0.05f, { 0.f, s - 0.5f, 1.f, 1.f } } );
 		}
 	}
 
-	void update(float dt)
+	bool update(float dt)
 	{
 		m_playerVelocity = m_playerControl;
 		m_playerPosition += m_playerVelocity * dt;
@@ -186,9 +186,16 @@ public:
 			}
 			else
 			{
+				if(length(it->m_position - m_playerPosition) < it->m_radius + m_playerRadius)
+				{
+					return false;
+				}
+
 				++it;
 			}
 		}
+
+		return true;
 	}
 
 	void render(Batcher& batcher) const
@@ -210,6 +217,7 @@ private:
 	vec2 m_playerPosition;
 	vec2 m_playerVelocity;
 	vec2 m_playerControl;
+	float m_playerRadius;
 
 	struct Enemy
 	{
@@ -226,11 +234,12 @@ private:
 
 		void render(Batcher& batcher) const
 		{
-			batcher.addCircle(m_position, 0.05f, m_color );
+			batcher.addCircle(m_position, m_radius, m_color );
 		}
 
 		vec2 m_position;
 		float m_speed;
+		float m_radius;
 		vec4 m_color;
 	};
 
@@ -252,7 +261,7 @@ struct GameState::PrivateData
 	vec2 joystickCenter;
 	vec2 joystickPosition;
 
-	Game game;
+	Game* game;
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -278,6 +287,8 @@ GameState::GameState() : m(new PrivateData)
 	m->joystickAreaRadius = 0.2f;
 	m->joystickStickRadius = 0.1f;
 	m->joystickMaxOffset = 0.1f;
+
+	m->game = nullptr;
 }
 
 GameState::~GameState()
@@ -288,10 +299,14 @@ GameState::~GameState()
 void GameState::enter(StateMachine* stateMachine)
 {
 	m->joystickActive = false;
+
+	m->game = new Game;
 }
 
 void GameState::leave(StateMachine* stateMachine)
 {
+	delete m->game;
+	m->game = nullptr;
 }
 
 void GameState::update(StateMachine* stateMachine)
@@ -299,14 +314,17 @@ void GameState::update(StateMachine* stateMachine)
 	if(m->joystickActive)
 	{
 		vec2 d = windowToView(stateMachine, m->joystickPosition) - windowToView(stateMachine, m->joystickCenter);
-		m->game.setControl(d / m->joystickMaxOffset);
+		m->game->setControl(d / m->joystickMaxOffset);
 	}
 	else
 	{
-		m->game.setControl(vec2::zero);
+		m->game->setControl(vec2::zero);
 	}
 
-	m->game.update((float)stateMachine->getDeltaTime());
+	if(!m->game->update((float)stateMachine->getDeltaTime()))
+	{
+		stateMachine->requestState("menu");
+	}
 }
 
 void GameState::render(StateMachine* stateMachine)
@@ -356,7 +374,7 @@ void GameState::render(StateMachine* stateMachine)
 
 	glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
 
-	m->game.render(m->batcher);
+	m->game->render(m->batcher);
 
 	if(m->joystickActive)
 	{
