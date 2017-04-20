@@ -224,6 +224,7 @@ void GameState::render(StateMachine* stateMachine)
 
 	glUseProgram(m->shaderProgram);
 
+	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, m->texture);
 
 	float sx, sy;
@@ -263,10 +264,12 @@ void GameState::render(StateMachine* stateMachine)
 		vec2 c = windowToView(stateMachine, m->joystickCenter);
 		vec2 p = windowToView(stateMachine, m->joystickPosition);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
 
-		m->batcher.addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 1.f } );
-		m->batcher.addCircle(p, m->joystickStickRadius, { 0.75f, 0.75f, 0.75f, 1.f } );
+		m->batcher.addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
+		m->batcher.addCircle(p, m->joystickStickRadius, { 0.75f, 0.75f, 0.75f, 0.333f } );
 
 		m->batcher.flush();
 	}
