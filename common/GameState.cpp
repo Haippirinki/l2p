@@ -163,11 +163,13 @@ class Game
 public:
 	Game() : m_playerPosition(vec2::zero), m_playerVelocity(vec2::zero), m_playerControl(vec2::zero)
 	{
-		for(int i = 0; i < 30; i++)
+		for(int i = 0; i < 300; i++)
 		{
 			float t = float(i);
-			float r = 3.f + t * 0.5f;
-			m_enemies.push_back( { { cosf(t) * r, sinf(t) * r }, 1.f, { 0.f, 0.f, 1.f, 1.f } } );
+			float r = 3.f + t * 0.25f;
+			float a = 3.7f * t;
+			float s = 1.f + 0.5f * sinf(t);
+			m_enemies.push_back( { { cosf(a) * r, sinf(a) * r }, s, { 0.f, s - 0.5f, 1.f, 1.f } } );
 		}
 	}
 
