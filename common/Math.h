@@ -35,3 +35,4 @@ vec2 operator/(const vec2& lhs, float rhs);
 vec2 operator-(const vec2& v);
 
 float length(const vec2& v);
+vec2 normalize(const vec2& v);

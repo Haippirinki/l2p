@@ -66,3 +66,8 @@ float length(const vec2& v)
 {
 	return sqrt(v.x * v.x + v.y * v.y);
 }
+
+vec2 normalize(const vec2& v)
+{
+	return v / length(v);
+}
