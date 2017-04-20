@@ -146,7 +146,7 @@ public:
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
 
-		glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m_vertices.size());
 
 		m_vertices.clear();
 	}
