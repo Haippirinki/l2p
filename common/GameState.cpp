@@ -157,6 +157,35 @@ private:
 	GLuint m_vertexBuffer;
 };
 
+class Game
+{
+public:
+	Game() : m_playerPosition(vec2::zero), m_playerVelocity(vec2::zero), m_playerControl(vec2::zero)
+	{
+	}
+
+	void update(float dt)
+	{
+		m_playerVelocity = m_playerControl;
+		m_playerPosition += m_playerVelocity * dt;
+	}
+
+	void render(Batcher& batcher)
+	{
+		batcher.addCircle(m_playerPosition, 0.05f, { 1.f, 0.f, 0.f, 1.f } );
+	}
+
+	void setControl(const vec2& control)
+	{
+		m_playerControl = control;
+	}
+
+private:
+	vec2 m_playerPosition;
+	vec2 m_playerVelocity;
+	vec2 m_playerControl;
+};
+
 struct GameState::PrivateData
 {
 	GLuint shaderProgram;
@@ -171,6 +200,8 @@ struct GameState::PrivateData
 	bool joystickActive;
 	vec2 joystickCenter;
 	vec2 joystickPosition;
+
+	Game game;
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -214,6 +245,17 @@ void GameState::leave(StateMachine* stateMachine)
 
 void GameState::update(StateMachine* stateMachine)
 {
+	if(m->joystickActive)
+	{
+		vec2 d = windowToView(stateMachine, m->joystickPosition) - windowToView(stateMachine, m->joystickCenter);
+		m->game.setControl(d / m->joystickMaxOffset);
+	}
+	else
+	{
+		m->game.setControl(vec2::zero);
+	}
+
+	m->game.update((float)stateMachine->getDeltaTime());
 }
 
 void GameState::render(StateMachine* stateMachine)
@@ -222,9 +264,11 @@ void GameState::render(StateMachine* stateMachine)
 	glClearColor(0.75f, 0.375f, 0.375f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glUseProgram(m->shaderProgram);
 
-	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, m->texture);
 
 	float sx, sy;
@@ -259,20 +303,20 @@ void GameState::render(StateMachine* stateMachine)
 
 	m->batcher.flush();
 
+	glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
+
+	m->game.render(m->batcher);
+
 	if(m->joystickActive)
 	{
 		vec2 c = windowToView(stateMachine, m->joystickCenter);
 		vec2 p = windowToView(stateMachine, m->joystickPosition);
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
-
 		m->batcher.addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
 		m->batcher.addCircle(p, m->joystickStickRadius, { 0.75f, 0.75f, 0.75f, 0.333f } );
-
-		m->batcher.flush();
 	}
+
+	m->batcher.flush();
 }
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
