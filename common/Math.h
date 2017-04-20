@@ -4,6 +4,8 @@ struct vec2
 {
 	float x;
 	float y;
+
+	static const vec2 zero;
 };
 
 struct vec3
@@ -11,6 +13,8 @@ struct vec3
 	float x;
 	float y;
 	float z;
+
+	static const vec3 zero;
 };
 
 struct vec4
@@ -19,6 +23,8 @@ struct vec4
 	float y;
 	float z;
 	float w;
+
+	static const vec4 zero;
 };
 
 vec2& operator+=(vec2& lhs, const vec2& rhs);

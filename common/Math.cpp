@@ -2,6 +2,10 @@
 
 #include <cmath>
 
+const vec2 vec2::zero { 0.f, 0.f };
+const vec3 vec3::zero { 0.f, 0.f, 0.f };
+const vec4 vec4::zero { 0.f, 0.f, 0.f, 0.f };
+
 vec2& operator+=(vec2& lhs, const vec2& rhs)
 {
 	lhs.x += rhs.x;

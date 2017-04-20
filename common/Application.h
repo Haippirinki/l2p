@@ -18,4 +18,6 @@ public:
 private:
 	bool m_initialized;
 	StateMachine m_stateMachine;
+	int64_t m_startTime;
+	int64_t m_lastUpdateTime;
 };
