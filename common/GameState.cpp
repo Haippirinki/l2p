@@ -6,6 +6,7 @@
 #include "StateMachine.h"
 
 #include <cassert>
+#include <cmath>
 #include <cstring>
 #include <vector>
 
@@ -17,6 +18,22 @@ static const char* glslVersion = "#version 300 es\n";
 static const char* glslVersion = "#version 330 core\n";
 #endif
 #endif
+
+static vec2 windowToView(StateMachine* stateMachine, const vec2& p)
+{
+	const float ww = stateMachine->getWindowWidth();
+	const float wh = stateMachine->getWindowHeight();
+	const float ws = (ww > wh) ? wh : ww;
+	return { (2.f * p.x - ww) / ws, (wh - 2.f * p.y) / ws };
+}
+
+static vec2 viewToWindow(StateMachine* stateMachine, const vec2& p)
+{
+	const float ww = stateMachine->getWindowWidth();
+	const float wh = stateMachine->getWindowHeight();
+	const float ws = (ww > wh) ? wh : ww;
+	return { 0.5f * (p.x * ws + ww), 0.5f * (wh - p.y * ws) };
+}
 
 static GLuint createShader(GLenum type, const void* data, size_t size)
 {
@@ -72,7 +89,7 @@ public:
 		vec2 position;
 		vec2 uv;
 		vec4 colorMul;
-		vec4 colorAdd;
+		vec3 colorAdd;
 	};
 
 	Batcher()
@@ -89,9 +106,33 @@ public:
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, colorAdd));
 	}
 
-	void addVertex(const vec2& position, const vec2& uv)
+	void addVertex(const vec2& position, const vec2& uv, const vec4& colorMul = { 1.f, 1.f, 1.f, 1.f }, const vec3& colorAdd = { 0.f, 0.f, 0.f } )
 	{
-		m_vertices.push_back( { position, uv, { 1.f, 1.f, 1.f, 1.f } , { 0.f, 0.f, 0.f } } );
+		m_vertices.push_back( Vertex { position, uv, colorMul, colorAdd } );
+	}
+
+	void addCircle(const vec2& center, float radius, const vec4& colorMul = { 1.f, 1.f, 1.f, 1.f }, const vec3& colorAdd = { 0.f, 0.f, 0.f } )
+	{
+		const int n = 64;
+		for(int i = 0; i < n; i++)
+		{
+			float a0 = 2.f * float(M_PI) * float(i) / float(n);
+			float a1 = 2.f * float(M_PI) * float(i + 1) / float(n);
+
+			vec2 d0 { cosf(a0), sinf(a0) };
+			vec2 d1 { cosf(a1), sinf(a1) };
+
+			vec2 p0 = center + radius * d0;
+			vec2 p1 = center + radius * d1;
+
+			vec2 uvCenter { 0.5f, 0.5f };
+			vec2 uv0 = uvCenter + 0.5f * d0;
+			vec2 uv1 = uvCenter + 0.5f * d1;
+
+			addVertex(center, uvCenter, colorMul, colorAdd);
+			addVertex(p0, uv0, colorMul, colorAdd);
+			addVertex(p1, uv1, colorMul, colorAdd);
+		}
 	}
 
 	void flush()
@@ -120,7 +161,16 @@ struct GameState::PrivateData
 {
 	GLuint shaderProgram;
 	GLuint texture;
+	GLuint whiteTexture;
 	Batcher batcher;
+
+	float joystickAreaRadius;
+	float joystickStickRadius;
+	float joystickMaxOffset;
+
+	bool joystickActive;
+	vec2 joystickCenter;
+	vec2 joystickPosition;
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -135,10 +185,17 @@ GameState::GameState() : m(new PrivateData)
 	glUseProgram(m->shaderProgram);
 	glUniform1i(glGetUniformLocation(m->shaderProgram, "u_sampler"), 0);
 
-	File textureFile("assets/images/lena.dds");
 	size_t width, height, depth;
 	GLenum bindTarget;
+	File textureFile("assets/images/lena.dds");
 	m->texture = loadDDS(textureFile.getData(), textureFile.getSize(), true, width, height, depth, bindTarget);
+
+	File whiteTextureFile("assets/images/white.dds");
+	m->whiteTexture = loadDDS(whiteTextureFile.getData(), whiteTextureFile.getSize(), true, width, height, depth, bindTarget);
+
+	m->joystickAreaRadius = 0.2f;
+	m->joystickStickRadius = 0.1f;
+	m->joystickMaxOffset = 0.1f;
 }
 
 GameState::~GameState()
@@ -148,6 +205,7 @@ GameState::~GameState()
 
 void GameState::enter(StateMachine* stateMachine)
 {
+	m->joystickActive = false;
 }
 
 void GameState::leave(StateMachine* stateMachine)
@@ -199,17 +257,43 @@ void GameState::render(StateMachine* stateMachine)
 	m->batcher.addVertex( { -w, -h }, { 0.f, 0.f } );
 
 	m->batcher.flush();
+
+	if(m->joystickActive)
+	{
+		vec2 c = windowToView(stateMachine, m->joystickCenter);
+		vec2 p = windowToView(stateMachine, m->joystickPosition);
+
+		glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
+
+		m->batcher.addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 1.f } );
+		m->batcher.addCircle(p, m->joystickStickRadius, { 0.75f, 0.75f, 0.75f, 1.f } );
+
+		m->batcher.flush();
+	}
 }
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
 {
-	stateMachine->requestState("test");
+	m->joystickActive = true;
+	m->joystickCenter = m->joystickPosition = { x, y };
 }
 
 void GameState::mouseUp(StateMachine* stateMachine, float x, float y)
 {
+	m->joystickActive = false;
 }
 
 void GameState::mouseMove(StateMachine* stateMachine, float x, float y)
 {
+	m->joystickPosition = { x, y };
+
+	if(m->joystickActive)
+	{
+		vec2 c = windowToView(stateMachine, m->joystickCenter);
+		vec2 p = windowToView(stateMachine, m->joystickPosition);
+		if(length(p - c) > m->joystickMaxOffset)
+		{
+			m->joystickCenter = viewToWindow(stateMachine, p + normalize(c - p) * m->joystickMaxOffset);
+		}
+	}
 }
