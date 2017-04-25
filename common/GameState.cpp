@@ -240,7 +240,6 @@ private:
 struct GameState::PrivateData
 {
 	GLuint shaderProgram;
-	GLuint texture;
 	GLuint whiteTexture;
 	Batcher batcher;
 
@@ -269,8 +268,6 @@ GameState::GameState() : m(new PrivateData)
 
 	size_t width, height, depth;
 	GLenum bindTarget;
-	File textureFile("assets/images/lena.dds");
-	m->texture = loadDDS(textureFile.getData(), textureFile.getSize(), true, width, height, depth, bindTarget);
 
 	File whiteTextureFile("assets/images/white.dds");
 	m->whiteTexture = loadDDS(whiteTextureFile.getData(), whiteTextureFile.getSize(), true, width, height, depth, bindTarget);
@@ -321,15 +318,13 @@ void GameState::update(StateMachine* stateMachine)
 void GameState::render(StateMachine* stateMachine)
 {
 	glViewport(0, 0, stateMachine->getFramebufferWidth(), stateMachine->getFramebufferHeight());
-	glClearColor(0.75f, 0.375f, 0.375f, 1.f);
+	glClearColor(0.9f, 0.9f, 0.95f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glUseProgram(m->shaderProgram);
-
-	glBindTexture(GL_TEXTURE_2D, m->texture);
 
 	float sx, sy;
 	if(stateMachine->getFramebufferWidth() > stateMachine->getFramebufferHeight())
@@ -351,18 +346,6 @@ void GameState::render(StateMachine* stateMachine)
 	};
 	glUniformMatrix4fv(glGetUniformLocation(m->shaderProgram, "u_modelViewProjection"), 1, GL_FALSE, mvp);
 
-	const float w = 0.9f;
-	const float h = 0.9f;
-
-	m->batcher.addVertex( { -w, -h }, { 0.f, 0.f } );
-	m->batcher.addVertex( { w, -h }, { 1.f, 0.f } );
-	m->batcher.addVertex( { w, h }, { 1.f, 1.f } );
-	m->batcher.addVertex( { w, h }, { 1.f, 1.f } );
-	m->batcher.addVertex( { -w, h }, { 0.f, 1.f } );
-	m->batcher.addVertex( { -w, -h }, { 0.f, 0.f } );
-
-	m->batcher.flush();
-
 	glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
 
 	m->game->render(m->batcher);
@@ -373,7 +356,7 @@ void GameState::render(StateMachine* stateMachine)
 		vec2 p = windowToView(stateMachine, m->joystickPosition);
 
 		m->batcher.addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
-		m->batcher.addCircle(p, m->joystickStickRadius, { 0.75f, 0.75f, 0.75f, 0.333f } );
+		m->batcher.addCircle(p, m->joystickStickRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
 	}
 
 	m->batcher.flush();
