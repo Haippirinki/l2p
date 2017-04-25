@@ -10,3 +10,5 @@
 #include <OpenGL/glext.h>
 #endif
 #endif
+
+extern const char* glslVersion;

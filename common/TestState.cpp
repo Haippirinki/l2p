@@ -7,15 +7,6 @@
 #include <cassert>
 #include <cstring>
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-static const char* glslVersion = "#version 300 es\n";
-#else
-static const char* glslVersion = "#version 330 core\n";
-#endif
-#endif
-
 static GLuint createShader(GLenum type, const void* data, size_t size)
 {
 	const GLchar* sources[] = { glslVersion, (const GLchar*)data };

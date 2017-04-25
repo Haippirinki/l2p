@@ -11,15 +11,6 @@
 #include <list>
 #include <vector>
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-static const char* glslVersion = "#version 300 es\n";
-#else
-static const char* glslVersion = "#version 330 core\n";
-#endif
-#endif
-
 static vec2 windowToView(StateMachine* stateMachine, const vec2& p)
 {
 	const float ww = stateMachine->getWindowWidth();
