@@ -11,4 +11,9 @@
 #endif
 #endif
 
+#ifdef _WIN32
+#include <win32/glcorearb.h>
+#include <win32/GL_3_3.h>
+#endif
+
 extern const char* glslVersion;

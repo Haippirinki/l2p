@@ -1,27 +1,37 @@
 SOURCES = $(wildcard common/*.cpp)
-SOURCES += osx/main.mm
 
-CXXFLAGS = -std=c++11
-INCLUDE = -I.
-FRAMEWORKS = -framework AppKit -framework OpenGL
+
+ifeq ($(shell uname -s),Darwin)
+	SOURCES += osx/main.mm
+	CXX = clang++
+	CXXFLAGS = -std=c++11 -I.
+	LDFLAGS = -framework AppKit -framework OpenGL
+	EXE_SUFFIX =
+else
+	SOURCES += win32/main.cpp win32/GL_3_3.cpp
+	CXX = g++
+	CXXFLAGS = -std=c++11 -I.
+	LDFLAGS = -mwindows -lopengl32
+	EXE_SUFFIX = .exe
+endif
 
 OBJS = $(addprefix build/,$(patsubst %.cpp,%.o,$(patsubst %.mm,%.o,$(SOURCES))))
 
-build/l2p: $(OBJS) Makefile
+build/l2p$(EXE_SUFFIX): $(OBJS) Makefile
 	@echo Linking $(@F)
 	@mkdir -p $(@D)
-	@clang++ -o build/l2p $(OBJS) $(FRAMEWORKS)
+	@$(CXX) -o $@ $(OBJS) $(LDFLAGS)
 
 build/%.o: %.mm Makefile
 	@echo Compiling $(<F)
 	@mkdir -p $(@D)
-	@clang++ -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $(INCLUDE) $<
-	@clang++ -c -o $@ $(CXXFLAGS) $(INCLUDE) $<
+	@$(CXX) -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $<
+	@$(CXX) -c -o $@ $(CXXFLAGS) $<
 
 build/%.o: %.cpp Makefile
 	@echo Compiling $(<F)
 	@mkdir -p $(@D)
-	@clang++ -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $(INCLUDE) $<
-	@clang++ -c -o $@ $(CXXFLAGS) $(INCLUDE) $<
+	@$(CXX) -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $<
+	@$(CXX) -c -o $@ $(CXXFLAGS) $<
 
 -include $(patsubst %.o,%.dep,$(OBJS))
