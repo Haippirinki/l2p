@@ -108,8 +108,8 @@ public:
 		const int n = 64;
 		for(int i = 0; i < n; i++)
 		{
-			float a0 = 2.f * float(M_PI) * float(i) / float(n);
-			float a1 = 2.f * float(M_PI) * float(i + 1) / float(n);
+			float a0 = 2.f * 3.14159f * float(i) / float(n);
+			float a1 = 2.f * 3.14159f * float(i + 1) / float(n);
 
 			vec2 d0 { cosf(a0), sinf(a0) };
 			vec2 d1 { cosf(a1), sinf(a1) };
