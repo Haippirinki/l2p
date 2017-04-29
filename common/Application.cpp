@@ -5,17 +5,32 @@
 #include "MenuState.h"
 #include "TestState.h"
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN 1
+#include <Windows.h>
+static int64_t s_frequency = 0;
+#else
 #include <sys/time.h>
+#endif
 
 static int64_t getMicroseconds()
 {
+#ifdef _WIN32
+	int64_t counter;
+	QueryPerformanceCounter((LARGE_INTEGER*)&counter);
+	return counter * 1000 / (s_frequency / 1000);
+#else
 	timeval tv;
 	gettimeofday(&tv, NULL);
 	return tv.tv_sec * 1000000L + tv.tv_usec;
+#endif
 }
 
 Application::Application() : m_initialized(false)
 {
+#ifdef _WIN32
+	QueryPerformanceFrequency((LARGE_INTEGER*)&s_frequency);
+#endif
 }
 
 Application::~Application()
