@@ -5,11 +5,7 @@
 #include "Math.h"
 #include "OpenGL.h"
 #include "StateMachine.h"
-
-#include <cmath>
-#include <cstring>
-#include <list>
-#include <vector>
+#include "World.h"
 
 static vec2 windowToView(StateMachine* stateMachine, const vec2& p)
 {
@@ -27,95 +23,6 @@ static vec2 viewToWindow(StateMachine* stateMachine, const vec2& p)
 	return { 0.5f * (p.x * ws + ww), 0.5f * (wh - p.y * ws) };
 }
 
-
-class Game
-{
-public:
-	Game() : m_playerPosition(vec2::zero), m_playerVelocity(vec2::zero), m_playerControl(vec2::zero), m_playerRadius(0.05f)
-	{
-		for(int i = 0; i < 300; i++)
-		{
-			float t = float(i);
-			float r = 3.f + t * 0.25f;
-			float a = 3.7f * t;
-			float s = 1.f + 0.5f * sinf(t);
-			m_enemies.push_back( { { cosf(a) * r, sinf(a) * r }, s, 0.05f, { 0.f, s - 0.5f, 1.f, 1.f } } );
-		}
-	}
-
-	bool update(float dt)
-	{
-		m_playerVelocity = m_playerControl;
-		m_playerPosition += m_playerVelocity * dt;
-
-		for(std::list<Enemy>::iterator it = m_enemies.begin(); it != m_enemies.end();)
-		{
-			if(!it->update(dt))
-			{
-				it = m_enemies.erase(it);
-			}
-			else
-			{
-				if(length(it->m_position - m_playerPosition) < it->m_radius + m_playerRadius)
-				{
-					return false;
-				}
-
-				++it;
-			}
-		}
-
-		return true;
-	}
-
-	void render(Batcher& batcher) const
-	{
-		batcher.addCircle(m_playerPosition, 0.05f, { 1.f, 0.f, 0.f, 1.f } );
-
-		for(std::list<Enemy>::const_iterator it = m_enemies.begin(); it != m_enemies.end(); ++it)
-		{
-			it->render(batcher);
-		}
-	}
-
-	void setControl(const vec2& control)
-	{
-		m_playerControl = control;
-	}
-
-private:
-	vec2 m_playerPosition;
-	vec2 m_playerVelocity;
-	vec2 m_playerControl;
-	float m_playerRadius;
-
-	struct Enemy
-	{
-		bool update(float dt)
-		{
-			if(length(m_position) < m_speed * dt)
-			{
-				return false;
-			}
-
-			m_position -= normalize(m_position) * (m_speed * dt);
-			return true;
-		}
-
-		void render(Batcher& batcher) const
-		{
-			batcher.addCircle(m_position, m_radius, m_color );
-		}
-
-		vec2 m_position;
-		float m_speed;
-		float m_radius;
-		vec4 m_color;
-	};
-
-	std::list<Enemy> m_enemies;
-};
-
 struct GameState::PrivateData
 {
 	GLuint shaderProgram;
@@ -130,7 +37,7 @@ struct GameState::PrivateData
 	vec2 joystickCenter;
 	vec2 joystickPosition;
 
-	Game* game;
+	World* world;
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -155,7 +62,7 @@ GameState::GameState() : m(new PrivateData)
 	m->joystickStickRadius = 0.1f;
 	m->joystickMaxOffset = 0.1f;
 
-	m->game = nullptr;
+	m->world = nullptr;
 }
 
 GameState::~GameState()
@@ -167,13 +74,13 @@ void GameState::enter(StateMachine* stateMachine)
 {
 	m->joystickActive = false;
 
-	m->game = new Game;
+	m->world = new World;
 }
 
 void GameState::leave(StateMachine* stateMachine)
 {
-	delete m->game;
-	m->game = nullptr;
+	delete m->world;
+	m->world = nullptr;
 }
 
 void GameState::update(StateMachine* stateMachine)
@@ -181,14 +88,14 @@ void GameState::update(StateMachine* stateMachine)
 	if(m->joystickActive)
 	{
 		vec2 d = windowToView(stateMachine, m->joystickPosition) - windowToView(stateMachine, m->joystickCenter);
-		m->game->setControl(d / m->joystickMaxOffset);
+		m->world->setControl(d / m->joystickMaxOffset);
 	}
 	else
 	{
-		m->game->setControl(vec2::zero);
+		m->world->setControl(vec2::zero);
 	}
 
-	if(!m->game->update((float)stateMachine->getDeltaTime()))
+	if(!m->world->update((float)stateMachine->getDeltaTime()))
 	{
 		stateMachine->requestState("menu");
 	}
@@ -227,7 +134,7 @@ void GameState::render(StateMachine* stateMachine)
 
 	glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
 
-	m->game->render(m->batcher);
+	m->world->render(m->batcher);
 
 	if(m->joystickActive)
 	{
