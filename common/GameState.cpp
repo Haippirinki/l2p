@@ -1,11 +1,11 @@
 #include "GameState.h"
+#include "Batcher.h"
 #include "DDSLoader.h"
 #include "File.h"
 #include "Math.h"
 #include "OpenGL.h"
 #include "StateMachine.h"
 
-#include <cassert>
 #include <cmath>
 #include <cstring>
 #include <list>
@@ -27,127 +27,6 @@ static vec2 viewToWindow(StateMachine* stateMachine, const vec2& p)
 	return { 0.5f * (p.x * ws + ww), 0.5f * (wh - p.y * ws) };
 }
 
-static GLuint createShader(GLenum type, const void* data, size_t size)
-{
-	const GLchar* sources[] = { glslVersion, (const GLchar*)data };
-	const GLint sizes[] = { (GLint)strlen(sources[0]), (GLint)size };
-
-	GLuint shader = glCreateShader(type);
-	glShaderSource(shader, 2, sources, sizes);
-	glCompileShader(shader);
-
-	const GLsizei maxInfoLength = 1024;
-	GLchar info[maxInfoLength];
-	glGetShaderInfoLog(shader, maxInfoLength, 0, info);
-	if(info[0])
-	{
-		printf("shader info log:\n%s", info);
-	}
-
-	GLint status;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	assert(status == GL_TRUE);
-
-	return shader;
-}
-
-static GLuint createProgram(GLuint vs, GLuint fs)
-{
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-
-	const GLsizei maxInfoLength = 1024;
-	GLchar info[maxInfoLength];
-	glGetProgramInfoLog(program, maxInfoLength, 0, info);
-	if(info[0])
-	{
-		printf("program info log:\n%s", info);
-	}
-
-	GLint status;
-	glGetProgramiv(program, GL_LINK_STATUS, &status);
-	assert(status == GL_TRUE);
-
-	return program;
-}
-
-class Batcher
-{
-public:
-	struct Vertex
-	{
-		vec2 position;
-		vec2 uv;
-		vec4 colorMul;
-		vec3 colorAdd;
-	};
-
-	Batcher()
-	{
-		glGenVertexArrays(1, &m_vertexArray);
-		glBindVertexArray(m_vertexArray);
-
-		glGenBuffers(1, &m_vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, position));
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, uv));
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, colorMul));
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, colorAdd));
-	}
-
-	void addVertex(const vec2& position, const vec2& uv, const vec4& colorMul = { 1.f, 1.f, 1.f, 1.f }, const vec3& colorAdd = { 0.f, 0.f, 0.f } )
-	{
-		m_vertices.push_back( Vertex { position, uv, colorMul, colorAdd } );
-	}
-
-	void addCircle(const vec2& center, float radius, const vec4& colorMul = { 1.f, 1.f, 1.f, 1.f }, const vec3& colorAdd = { 0.f, 0.f, 0.f } )
-	{
-		const int n = 64;
-		for(int i = 0; i < n; i++)
-		{
-			float a0 = 2.f * 3.14159f * float(i) / float(n);
-			float a1 = 2.f * 3.14159f * float(i + 1) / float(n);
-
-			vec2 d0 { cosf(a0), sinf(a0) };
-			vec2 d1 { cosf(a1), sinf(a1) };
-
-			vec2 p0 = center + radius * d0;
-			vec2 p1 = center + radius * d1;
-
-			vec2 uvCenter { 0.5f, 0.5f };
-			vec2 uv0 = uvCenter + 0.5f * d0;
-			vec2 uv1 = uvCenter + 0.5f * d1;
-
-			addVertex(center, uvCenter, colorMul, colorAdd);
-			addVertex(p0, uv0, colorMul, colorAdd);
-			addVertex(p1, uv1, colorMul, colorAdd);
-		}
-	}
-
-	void flush()
-	{
-		glBindVertexArray(m_vertexArray);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), m_vertices.data(), GL_STREAM_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
-
-		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m_vertices.size());
-
-		m_vertices.clear();
-	}
-
-private:
-	std::vector<Vertex> m_vertices;
-	GLuint m_vertexArray;
-	GLuint m_vertexBuffer;
-};
 
 class Game
 {

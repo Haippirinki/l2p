@@ -17,3 +17,6 @@
 #endif
 
 extern const char* glslVersion;
+
+GLuint createShader(GLenum type, const void* data, size_t size);
+GLuint createProgram(GLuint vs, GLuint fs);
