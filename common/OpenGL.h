@@ -16,6 +16,8 @@
 #include <win32/GL_3_3.h>
 #endif
 
+#include <cstddef>
+
 extern const char* glslVersion;
 
 GLuint createShader(GLenum type, const void* data, size_t size);

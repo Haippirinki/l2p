@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdio>
+#include <cstring>
 
 #ifdef GL_ES_VERSION_3_0
 const char* glslVersion = "#version 300 es\n";
