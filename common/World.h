@@ -2,6 +2,8 @@
 
 #include "Math.h"
 
+#include <cstddef>
+
 class Batcher;
 
 class World
@@ -9,6 +11,8 @@ class World
 public:
 	World();
 	~World();
+
+	void init(const void* data, size_t size);
 
 	bool update(float dt);
 	void render(Batcher& batcher) const;

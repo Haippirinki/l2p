@@ -1,8 +1,45 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include "World.h"
 #include "Batcher.h"
 
+#include <cassert>
+#include <cctype>
 #include <cmath>
+#include <cstring>
 #include <list>
+#include <string>
+
+std::list<std::string> getLines(const char* data, size_t size)
+{
+	std::list<std::string> lines;
+
+	const char* p = nullptr;
+	for(size_t i = 0; i < size; i++)
+	{
+		if(!p)
+		{
+			if(!isspace(data[i]))
+			{
+				p = data + i;
+			}
+		}
+		else
+		{
+			if(data[i] == '\n')
+			{
+				lines.push_back(std::string(p, i - (p - data)));
+				p = nullptr;
+			}
+		}
+	}
+
+	if(p)
+	{
+		lines.push_back(std::string(p, size - (p - data)));
+	}
+
+	return lines;
+}
 
 struct Enemy
 {
@@ -44,20 +81,32 @@ World::World() : m(new PrivateData)
 	m->playerVelocity = vec2::zero;
 	m->playerControl = vec2::zero;
 	m->playerRadius = 0.05f;
-
-	for(int i = 0; i < 300; i++)
-	{
-		float t = float(i);
-		float r = 3.f + t * 0.25f;
-		float a = 3.7f * t;
-		float s = 1.f + 0.5f * sinf(t);
-		m->enemies.push_back({ { cosf(a) * r, sinf(a) * r }, s, 0.05f,{ 0.f, s - 0.5f, 1.f, 1.f } });
-	}
 }
 
 World::~World()
 {
 	delete m;
+}
+
+void World::init(const void* data, size_t size)
+{
+	std::list<std::string> lines = getLines((const char*)data, size);
+	for(std::list<std::string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	{
+		char type[32];
+		if(sscanf(it->c_str(), "%s", type) == 1)
+		{
+			if(strcmp(type, "basic") == 0)
+			{
+				float time, distance, degrees, speed;
+				int n = sscanf(it->c_str() + strlen(type), "%f %f %f %f", &time, &distance, &degrees, &speed);
+				assert(n == 4);
+
+				float a = 3.14159f * degrees / 180.f;
+				m->enemies.push_back({ { cosf(a) * distance, sinf(a) * distance }, speed, 0.05f,{ 0.f, speed - 0.5f, 1.f, 1.f } });
+			}
+		}
+	}
 }
 
 bool World::update(float dt)
