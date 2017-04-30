@@ -197,7 +197,7 @@ void GameState::update(StateMachine* stateMachine)
 void GameState::render(StateMachine* stateMachine)
 {
 	glViewport(0, 0, stateMachine->getFramebufferWidth(), stateMachine->getFramebufferHeight());
-	glClearColor(0.9f, 0.9f, 0.95f, 1.f);
+	glClearColor(1.f, 0.9406f, 0.7969f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
