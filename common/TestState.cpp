@@ -4,8 +4,6 @@
 #include "OpenGL.h"
 #include "StateMachine.h"
 
-#include <cstring>
-
 struct TestState::PrivateData
 {
 	GLuint shaderProgram;
