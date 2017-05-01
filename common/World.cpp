@@ -72,6 +72,9 @@ struct World::PrivateData
 	vec2 playerControl;
 	float playerRadius;
 
+	float time;
+
+	std::list<std::pair<float, Enemy>> pendingEnemies;
 	std::list<Enemy> enemies;
 };
 
@@ -81,6 +84,7 @@ World::World() : m(new PrivateData)
 	m->playerVelocity = vec2::zero;
 	m->playerControl = vec2::zero;
 	m->playerRadius = 0.05f;
+	m->time = 0.f;
 }
 
 World::~World()
@@ -103,7 +107,8 @@ void World::init(const void* data, size_t size)
 				assert(n == 4);
 
 				float a = 3.14159f * degrees / 180.f;
-				m->enemies.push_back({ { cosf(a) * distance, sinf(a) * distance }, speed, 0.05f,{ 0.f, speed - 0.5f, 1.f, 1.f } });
+				Enemy enemy = { { cosf(a) * distance, sinf(a) * distance }, speed, 0.05f,{ 0.f, speed - 0.5f, 1.f, 1.f } };
+				m->pendingEnemies.push_back(std::pair<float, Enemy>(time, enemy));
 			}
 		}
 	}
@@ -113,6 +118,14 @@ bool World::update(float dt)
 {
 	m->playerVelocity = m->playerControl;
 	m->playerPosition += m->playerVelocity * dt;
+
+	m->time += dt;
+
+	while(!m->pendingEnemies.empty() && m->pendingEnemies.front().first <= m->time)
+	{
+		m->enemies.push_back(m->pendingEnemies.front().second);
+		m->pendingEnemies.pop_front();
+	}
 
 	for(std::list<Enemy>::iterator it = m->enemies.begin(); it != m->enemies.end();)
 	{
