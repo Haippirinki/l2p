@@ -65,8 +65,15 @@ struct Enemy
 	vec4 m_color;
 };
 
+static bool comparePendingEnemies(const std::pair<float, Enemy>& lhs, const std::pair<float, Enemy>& rhs)
+{
+	return lhs.first < rhs.first;
+}
+
 struct World::PrivateData
 {
+	State state;
+
 	vec2 playerPosition;
 	vec2 playerVelocity;
 	vec2 playerControl;
@@ -80,10 +87,13 @@ struct World::PrivateData
 
 World::World() : m(new PrivateData)
 {
+	m->state = Playing;
+
 	m->playerPosition = vec2::zero;
 	m->playerVelocity = vec2::zero;
 	m->playerControl = vec2::zero;
 	m->playerRadius = 0.05f;
+
 	m->time = 0.f;
 }
 
@@ -112,9 +122,11 @@ void World::init(const void* data, size_t size)
 			}
 		}
 	}
+
+	m->pendingEnemies.sort(comparePendingEnemies);
 }
 
-bool World::update(float dt)
+void World::update(float dt)
 {
 	m->playerVelocity = m->playerControl;
 	m->playerPosition += m->playerVelocity * dt;
@@ -137,18 +149,34 @@ bool World::update(float dt)
 		{
 			if(length(it->m_position - m->playerPosition) < it->m_radius + m->playerRadius)
 			{
-				return false;
+				m->state = Lost;
+				return;
 			}
 
 			++it;
 		}
 	}
 
-	return true;
+	if(m->pendingEnemies.empty() && m->enemies.empty())
+	{
+		if(length(m->playerPosition) < 0.05f + m->playerRadius)
+		{
+			m->state = Won;
+		}
+	}
 }
 
 void World::render(Batcher& batcher) const
 {
+	if(m->pendingEnemies.empty() && m->enemies.empty())
+	{
+		batcher.addCircle(vec2::zero, 0.05f, { 0.f, 0.f, 0.f, 1.f });
+	}
+	else
+	{
+		batcher.addCircle(vec2::zero, 0.05f, { 0.5f, 0.5f, 0.5f, 0.5f });
+	}
+
 	batcher.addCircle(m->playerPosition, 0.05f, { 1.f, 0.f, 0.f, 1.f });
 
 	for(std::list<Enemy>::const_iterator it = m->enemies.begin(); it != m->enemies.end(); ++it)
@@ -160,4 +188,9 @@ void World::render(Batcher& batcher) const
 void World::setControl(const vec2& control)
 {
 	m->playerControl = control;
+}
+
+World::State World::getState() const
+{
+	return m->state;
 }

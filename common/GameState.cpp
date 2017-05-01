@@ -98,9 +98,15 @@ void GameState::update(StateMachine* stateMachine)
 		m->world->setControl(vec2::zero);
 	}
 
-	if(!m->world->update((float)stateMachine->getDeltaTime()))
+	m->world->update((float)stateMachine->getDeltaTime());
+
+	if(m->world->getState() == World::Lost)
 	{
 		stateMachine->requestState("menu");
+	}
+	else if(m->world->getState() == World::Won)
+	{
+		stateMachine->requestState("test");
 	}
 }
 
