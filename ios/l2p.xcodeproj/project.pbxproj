@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F2222621EB7756B00394F35 /* Batcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F22225E1EB7756B00394F35 /* Batcher.cpp */; };
+		0F2222631EB7756B00394F35 /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F2222601EB7756B00394F35 /* World.cpp */; };
 		0F300D481EA146400059AA40 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F300D461EA146400059AA40 /* Application.cpp */; };
 		0F300D4B1EA14A640059AA40 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4A1EA14A640059AA40 /* UIKit.framework */; };
 		0F300D4D1EA14A6A0059AA40 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4C1EA14A6A0059AA40 /* GLKit.framework */; };
@@ -27,6 +29,10 @@
 
 /* Begin PBXFileReference section */
 		0F0C09591EA140AB003F09DB /* l2p.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = l2p.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F22225E1EB7756B00394F35 /* Batcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Batcher.cpp; path = ../common/Batcher.cpp; sourceTree = "<group>"; };
+		0F22225F1EB7756B00394F35 /* Batcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Batcher.h; path = ../common/Batcher.h; sourceTree = "<group>"; };
+		0F2222601EB7756B00394F35 /* World.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = World.cpp; path = ../common/World.cpp; sourceTree = "<group>"; };
+		0F2222611EB7756B00394F35 /* World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = World.h; path = ../common/World.h; sourceTree = "<group>"; };
 		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; usesTabs = 1; };
 		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; usesTabs = 1; };
 		0F300D4A1EA14A640059AA40 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -93,6 +99,10 @@
 		0F300D451EA146210059AA40 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0F22225E1EB7756B00394F35 /* Batcher.cpp */,
+				0F22225F1EB7756B00394F35 /* Batcher.h */,
+				0F2222601EB7756B00394F35 /* World.cpp */,
+				0F2222611EB7756B00394F35 /* World.h */,
 				0F5F37DF1EAFAA0C0027A884 /* OpenGL.cpp */,
 				0F9B558F1EA6848D003E40CC /* TestState.cpp */,
 				0F9B55901EA6848D003E40CC /* TestState.h */,
@@ -211,12 +221,14 @@
 				0F9B558E1EA68482003E40CC /* Math.cpp in Sources */,
 				0FC0174C1EA39C85007C7EA7 /* DDSLoader.cpp in Sources */,
 				0F300D481EA146400059AA40 /* Application.cpp in Sources */,
+				0F2222631EB7756B00394F35 /* World.cpp in Sources */,
 				0F5B32321EA1719300266FA6 /* GameState.cpp in Sources */,
 				0F5B322F1EA170E400266FA6 /* StateMachine.cpp in Sources */,
 				0F5B322D1EA170E400266FA6 /* MenuState.cpp in Sources */,
 				0F5F37E01EAFAA0C0027A884 /* OpenGL.cpp in Sources */,
 				0FF458D61EA141C0004FAC7E /* main.mm in Sources */,
 				0F5B322E1EA170E400266FA6 /* State.cpp in Sources */,
+				0F2222621EB7756B00394F35 /* Batcher.cpp in Sources */,
 				0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */,
 				0F9B55911EA6848D003E40CC /* TestState.cpp in Sources */,
 			);
