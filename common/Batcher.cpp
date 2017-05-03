@@ -47,6 +47,16 @@ void Batcher::addVertex(const vec2& position, const vec2& uv, const vec4& colorM
 	m->vertices.push_back(Vertex{ position, uv, colorMul, colorAdd });
 }
 
+void Batcher::addQuad(const vec2& xy0, const vec2& xy1, const vec2& uv0, const vec2& uv1, const vec4& colorMul, const vec3& colorAdd)
+{
+	addVertex({ xy0.x, xy0.y }, { uv0.x, 1.f - uv0.y }, colorMul, colorAdd);
+	addVertex({ xy0.x, xy1.y }, { uv0.x, 1.f - uv1.y }, colorMul, colorAdd);
+	addVertex({ xy1.x, xy0.y }, { uv1.x, 1.f - uv0.y }, colorMul, colorAdd);
+	addVertex({ xy0.x, xy1.y }, { uv0.x, 1.f - uv1.y }, colorMul, colorAdd);
+	addVertex({ xy1.x, xy1.y }, { uv1.x, 1.f - uv1.y }, colorMul, colorAdd);
+	addVertex({ xy1.x, xy0.y }, { uv1.x, 1.f - uv0.y }, colorMul, colorAdd);
+}
+
 void Batcher::addCircle(const vec2& center, float radius, const vec4& colorMul, const vec3& colorAdd)
 {
 	const int n = 64;
@@ -73,16 +83,19 @@ void Batcher::addCircle(const vec2& center, float radius, const vec4& colorMul, 
 
 void Batcher::flush()
 {
-	glBindVertexArray(m->vertexArray);
-	glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m->vertices.size(), m->vertices.data(), GL_STREAM_DRAW);
+	if(!m->vertices.empty())
+	{
+		glBindVertexArray(m->vertexArray);
+		glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m->vertices.size(), m->vertices.data(), GL_STREAM_DRAW);
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m->vertices.size());
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m->vertices.size());
 
-	m->vertices.clear();
+		m->vertices.clear();
+	}
 }
