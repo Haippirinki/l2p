@@ -25,6 +25,7 @@
 		0F9B55911EA6848D003E40CC /* TestState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B558F1EA6848D003E40CC /* TestState.cpp */; };
 		0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FA0A2691EA2058A00D85832 /* File.cpp */; };
 		0FC0174C1EA39C85007C7EA7 /* DDSLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0174A1EA39C85007C7EA7 /* DDSLoader.cpp */; };
+		0FD090CD1ED99A24002D3F7B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */; };
 		0FF458D61EA141C0004FAC7E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0FF458D51EA141C0004FAC7E /* main.mm */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,7 @@
 		0FA0A26A1EA2058A00D85832 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = File.h; path = ../common/File.h; sourceTree = "<group>"; };
 		0FC0174A1EA39C85007C7EA7 /* DDSLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DDSLoader.cpp; path = ../common/DDSLoader.cpp; sourceTree = "<group>"; };
 		0FC0174B1EA39C85007C7EA7 /* DDSLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDSLoader.h; path = ../common/DDSLoader.h; sourceTree = "<group>"; };
+		0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0FF458D51EA141C0004FAC7E /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = main.mm; sourceTree = SOURCE_ROOT; usesTabs = 1; };
 		0FF458D81EA14278004FAC7E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -83,6 +85,7 @@
 		0F0C09501EA140AB003F09DB = {
 			isa = PBXGroup;
 			children = (
+				0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */,
 				0F6A19C21EA230250078DE96 /* assets */,
 				0F300D451EA146210059AA40 /* common */,
 				0FF458D71EA1423D004FAC7E /* ios */,
@@ -213,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F6A19C31EA230250078DE96 /* assets in Resources */,
+				0FD090CD1ED99A24002D3F7B /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,7 +343,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 7JW263HHSD;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -353,7 +356,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 7JW263HHSD;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
