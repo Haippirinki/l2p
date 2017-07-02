@@ -11,6 +11,10 @@
 #endif
 #endif
 
+#ifdef ANDROID
+#include <GLES3/gl3.h>
+#endif
+
 #ifdef _WIN32
 #include <win32/glcorearb.h>
 #include <win32/GL_3_3.h>
