@@ -10,6 +10,11 @@
 #include <sys/stat.h>
 #endif
 
+#ifdef ANDROID
+#include <android/asset_manager.h>
+AAssetManager* File::s_assetManager = nullptr;
+#endif
+
 File::File(const char* path)
 {
 #ifdef _WIN32
@@ -29,6 +34,15 @@ File::File(const char* path)
 		m_data = nullptr;
 	}
 #else
+#ifdef ANDROID
+	if(strncmp(path, "assets/", 7) == 0)
+	{
+		path += 7;
+	}
+	m_asset = AAssetManager_open(s_assetManager, path, AASSET_MODE_BUFFER);
+	m_data = AAsset_getBuffer(m_asset);
+	m_size = (size_t)AAsset_getLength(m_asset);
+#else
 	m_file = open(path, O_RDONLY);
 	if(m_file != -1)
 	{
@@ -42,6 +56,7 @@ File::File(const char* path)
 		m_size = 0;
 		m_data = nullptr;
 	}
+#endif
 #endif
 }
 
@@ -63,6 +78,9 @@ File::~File()
 		CloseHandle(m_file);
 	}
 #else
+#ifdef ANDROID
+	AAsset_close(m_asset);
+#else
 	if(m_data)
 	{
 		munmap(m_data, m_size);
@@ -72,6 +90,7 @@ File::~File()
 	{
 		close(m_file);
 	}
+#endif
 #endif
 }
 
@@ -84,3 +103,10 @@ const void* File::getData() const
 {
 	return m_data;
 }
+
+#ifdef ANDROID
+void File::init(AAssetManager* assetManager)
+{
+	s_assetManager = assetManager;
+}
+#endif
