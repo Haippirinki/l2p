@@ -355,6 +355,7 @@ extern PFNGLVERTEXATTRIBP4UIPROC glVertexAttribP4ui;
 extern PFNGLVERTEXATTRIBP4UIVPROC glVertexAttribP4uiv;
 
 #ifndef GL_EXT_texture_compression_s3tc
+#define GL_EXT_texture_compression_s3tc 1
 #define GL_COMPRESSED_RGB_S3TC_DXT1_EXT   0x83F0
 #define GL_COMPRESSED_RGBA_S3TC_DXT1_EXT  0x83F1
 #define GL_COMPRESSED_RGBA_S3TC_DXT3_EXT  0x83F2
@@ -362,11 +363,13 @@ extern PFNGLVERTEXATTRIBP4UIVPROC glVertexAttribP4uiv;
 #endif
 
 #ifndef GL_EXT_texture_filter_anisotropic
+#define GL_EXT_texture_filter_anisotropic 1
 #define GL_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
 #endif
 
 #ifndef GL_EXT_texture_sRGB
+#define GL_EXT_texture_sRGB 1
 #define GL_SRGB_EXT                       0x8C40
 #define GL_SRGB8_EXT                      0x8C41
 #define GL_SRGB_ALPHA_EXT                 0x8C42
