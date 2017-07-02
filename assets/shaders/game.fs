@@ -8,6 +8,6 @@ out highp vec4 fragmentColor;
 
 void main()
 {
-	lowp vec4 sample = texture(u_sampler, v_uv);
-	fragmentColor = sample * v_colorMul + vec4(v_colorAdd * sample.a, 0.0);
+	lowp vec4 s = texture(u_sampler, v_uv);
+	fragmentColor = s * v_colorMul + vec4(v_colorAdd * s.a, 0.0);
 }
