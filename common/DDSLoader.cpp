@@ -117,6 +117,7 @@ static bool getTextureFormat(const DDS_HEADER* header, const DDS_HEADER_DXT10* h
 				return true;
 			}
 
+#ifdef GL_BGRA
 			if(header->ddspf.RBitMask == 0xff0000 && header->ddspf.GBitMask == 0xff00 && header->ddspf.BBitMask == 0xff && header->ddspf.ABitMask == 0xff000000)
 			{
 				internalFormat = sRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
@@ -126,6 +127,7 @@ static bool getTextureFormat(const DDS_HEADER* header, const DDS_HEADER_DXT10* h
 				blockSize = 4;
 				return true;
 			}
+#endif
 		}
 	}
 	else if(header->ddspf.flags & DDS_PIXELFORMAT_FLAGS_LUMINANCE || header->ddspf.flags & DDS_PIXELFORMAT_FLAGS_ALPHAPIXELS)
@@ -140,7 +142,7 @@ static bool getTextureFormat(const DDS_HEADER* header, const DDS_HEADER_DXT10* h
 			return true;
 		}
 	}
-#if defined(GL_EXT_texture_compression_s3tc)
+#if defined(GL_EXT_texture_compression_s3tc) && defined(GL_EXT_texture_sRGB)
 	else if(header->ddspf.flags & DDS_PIXELFORMAT_FLAGS_FOURCC)
 	{
 		switch(header->ddspf.fourCC)
