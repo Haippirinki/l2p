@@ -83,7 +83,7 @@ File::~File()
 #else
 	if(m_data)
 	{
-		munmap(m_data, m_size);
+		munmap(const_cast<void*>(m_data), m_size);
 	}
 
 	if(m_file != -1)
