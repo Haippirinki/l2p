@@ -5,7 +5,7 @@ include_directories(../.. ${ANDROID_NDK}/sources/android/native_app_glue)
 add_library(
 	native-lib
 	SHARED
-	src/main/cpp/native-lib.cpp
+	src/main/cpp/main.cpp
 	../../common/Application.cpp
 	../../common/Batcher.cpp
 	../../common/BitmapFont.cpp
