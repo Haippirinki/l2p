@@ -19,6 +19,7 @@
 		0F5B322E1EA170E400266FA6 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B32291EA170E400266FA6 /* State.cpp */; };
 		0F5B322F1EA170E400266FA6 /* StateMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B322B1EA170E400266FA6 /* StateMachine.cpp */; };
 		0F5B32321EA1719300266FA6 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B32301EA1719300266FA6 /* GameState.cpp */; };
+		0F5E03691F1AAF8D00D9328D /* Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E03681F1AAF8D00D9328D /* Platform.mm */; };
 		0F5F37E01EAFAA0C0027A884 /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5F37DF1EAFAA0C0027A884 /* OpenGL.cpp */; };
 		0F6A19C31EA230250078DE96 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 0F6A19C21EA230250078DE96 /* assets */; };
 		0F9B558E1EA68482003E40CC /* Math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B558C1EA68482003E40CC /* Math.cpp */; };
@@ -52,6 +53,7 @@
 		0F5B322C1EA170E400266FA6 /* StateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateMachine.h; path = ../common/StateMachine.h; sourceTree = "<group>"; };
 		0F5B32301EA1719300266FA6 /* GameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameState.cpp; path = ../common/GameState.cpp; sourceTree = "<group>"; };
 		0F5B32311EA1719300266FA6 /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameState.h; path = ../common/GameState.h; sourceTree = "<group>"; };
+		0F5E03681F1AAF8D00D9328D /* Platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Platform.mm; sourceTree = SOURCE_ROOT; };
 		0F5F37DF1EAFAA0C0027A884 /* OpenGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL.cpp; path = ../common/OpenGL.cpp; sourceTree = "<group>"; };
 		0F6A19C21EA230250078DE96 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
 		0F9B558C1EA68482003E40CC /* Math.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Math.cpp; path = ../common/Math.cpp; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		0FF458D71EA1423D004FAC7E /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				0F5E03681F1AAF8D00D9328D /* Platform.mm */,
 				0FF458D81EA14278004FAC7E /* Info.plist */,
 				0FF458D51EA141C0004FAC7E /* main.mm */,
 			);
@@ -240,6 +243,7 @@
 				0F5B322E1EA170E400266FA6 /* State.cpp in Sources */,
 				0F2222621EB7756B00394F35 /* Batcher.cpp in Sources */,
 				0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */,
+				0F5E03691F1AAF8D00D9328D /* Platform.mm in Sources */,
 				0F9B55911EA6848D003E40CC /* TestState.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

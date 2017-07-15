@@ -133,10 +133,16 @@ namespace
 	}
 }
 
+namespace Platform
+{
+	void init(JNIEnv* jniEnv, ANativeActivity* activity);
+}
+
 void android_main(struct android_app* app)
 {
 	app->activity->vm->AttachCurrentThread(&jniEnv, 0);
 
+	Platform::init(jniEnv, app->activity);
 	File::init(app->activity->assetManager);
 
 	app->onAppCmd = handleAppCmd;

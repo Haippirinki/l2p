@@ -2,13 +2,13 @@ SOURCES = $(wildcard common/*.cpp)
 
 
 ifeq ($(shell uname -s),Darwin)
-	SOURCES += osx/main.mm
+	SOURCES += osx/main.mm osx/Platform.mm
 	CXX = clang++
 	CXXFLAGS = -std=c++11 -I.
 	LDFLAGS = -framework AppKit -framework OpenGL
 	EXE_SUFFIX =
 else
-	SOURCES += win32/main.cpp win32/GL_3_3.cpp
+	SOURCES += win32/main.cpp win32/GL_3_3.cpp win32/Platform.cpp
 	CXX = g++
 	CXXFLAGS = -std=c++11 -I.
 	LDFLAGS = -mwindows -lopengl32

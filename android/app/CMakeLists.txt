@@ -6,6 +6,7 @@ add_library(
 	native-lib
 	SHARED
 	src/main/cpp/main.cpp
+	src/main/cpp/Platform.cpp
 	../../common/Application.cpp
 	../../common/Batcher.cpp
 	../../common/BitmapFont.cpp

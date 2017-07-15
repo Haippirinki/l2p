@@ -6,6 +6,11 @@
 
 #include <unistd.h>
 
+namespace Platform
+{
+	void init();
+}
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GLKViewDelegate>
 {
 	Application* myApplication;
@@ -48,6 +53,7 @@
 	
 	[self.window makeKeyAndVisible];
 	
+	Platform::init();
 	myApplication = new Application;
 
 	return YES;
