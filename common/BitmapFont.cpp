@@ -190,6 +190,13 @@ const BitmapFont::Character* BitmapFont::getCharacter(uint32_t id) const
 			return &(*it);
 		}
 	}
+	for(auto it = m->chars.begin(); it != m->chars.end(); ++it)
+	{
+		if(it->id == 0xffffffff)
+		{
+			return &(*it);
+		}
+	}
 	return nullptr;
 }
 
