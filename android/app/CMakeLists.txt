@@ -2,24 +2,14 @@ cmake_minimum_required(VERSION 3.4.1)
 
 include_directories(../.. ${ANDROID_NDK}/sources/android/native_app_glue)
 
+aux_source_directory(../../common common-src)
+
 add_library(
 	native-lib
 	SHARED
 	src/main/cpp/main.cpp
 	src/main/cpp/Platform.cpp
-	../../common/Application.cpp
-	../../common/Batcher.cpp
-	../../common/BitmapFont.cpp
-	../../common/DDSLoader.cpp
-	../../common/File.cpp
-	../../common/GameState.cpp
-	../../common/Math.cpp
-	../../common/MenuState.cpp
-	../../common/OpenGL.cpp
-	../../common/State.cpp
-	../../common/StateMachine.cpp
-	../../common/TestState.cpp
-	../../common/World.cpp)
+	${common-src})
 
 add_library(
 	native-app-glue
