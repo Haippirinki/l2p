@@ -1,5 +1,5 @@
 SOURCES = $(wildcard common/*.cpp)
-
+LEVEL_SOURCES = $(wildcard levels/level-*.py)
 
 ifeq ($(shell uname -s),Darwin)
 	SOURCES += osx/main.mm osx/Platform.mm
@@ -16,8 +16,12 @@ else
 endif
 
 OBJS = $(addprefix build/,$(patsubst %.cpp,%.o,$(patsubst %.mm,%.o,$(SOURCES))))
+LEVELS = $(addprefix assets/,$(patsubst %.py,%.level,$(LEVEL_SOURCES)))
+EXE = build/l2p$(EXE_SUFFIX)
 
-build/l2p$(EXE_SUFFIX): $(OBJS) Makefile
+all: $(EXE) $(LEVELS)
+
+$(EXE): $(OBJS) Makefile
 	@echo Linking $(@F)
 	@mkdir -p $(@D)
 	@$(CXX) -o $@ $(OBJS) $(LDFLAGS)
@@ -33,5 +37,9 @@ build/%.o: %.cpp Makefile
 	@mkdir -p $(@D)
 	@$(CXX) -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $<
 	@$(CXX) -c -o $@ $(CXXFLAGS) $<
+
+assets/%.level: %.py levels/gen.py
+	@echo Generating $(@F)
+	@PYTHONPATH=levels python -B $< > $@
 
 -include $(patsubst %.o,%.dep,$(OBJS))

@@ -74,7 +74,7 @@ void GameState::enter(StateMachine* stateMachine)
 {
 	m->joystickActive = false;
 
-	File levelFile("assets/levels/level-1");
+	File levelFile("assets/levels/level-1.level");
 
 	m->world = new World;
 	m->world->init(levelFile.getData(), levelFile.getSize());
