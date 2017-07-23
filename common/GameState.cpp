@@ -39,6 +39,8 @@ struct GameState::PrivateData
 	vec2 joystickPosition;
 
 	World* world;
+
+	double exitTime;
 };
 
 GameState::GameState() : m(new PrivateData)
@@ -79,6 +81,8 @@ void GameState::enter(StateMachine* stateMachine)
 
 	m->world = new World;
 	m->world->init(levelFile.getData(), levelFile.getSize());
+
+	m->exitTime = 0.0;
 }
 
 void GameState::leave(StateMachine* stateMachine)
@@ -89,32 +93,39 @@ void GameState::leave(StateMachine* stateMachine)
 
 void GameState::update(StateMachine* stateMachine)
 {
-	if(m->joystickActive)
+	if(!m->exitTime)
 	{
-		vec2 d = windowToView(stateMachine, m->joystickPosition) - windowToView(stateMachine, m->joystickCenter);
-		m->world->setControl(d / m->joystickMaxOffset);
-	}
-	else
-	{
-		m->world->setControl(vec2::zero);
-	}
-
-	m->world->update((float)stateMachine->getDeltaTime());
-
-	if(m->world->getState() == World::Lost)
-	{
-		stateMachine->requestState("menu");
-	}
-	else if(m->world->getState() == World::Won)
-	{
-		if(!Profile::getLevelName(Profile::getCurrentLevel() + 1).empty())
+		if(m->joystickActive)
 		{
-			Profile::setCurrentLevel(Profile::getCurrentLevel() + 1);
+			vec2 d = windowToView(stateMachine, m->joystickPosition) - windowToView(stateMachine, m->joystickCenter);
+			m->world->setControl(d / m->joystickMaxOffset);
 		}
 		else
 		{
-			Profile::setCurrentLevel(0);
+			m->world->setControl(vec2::zero);
 		}
+
+		m->world->update((float)stateMachine->getDeltaTime());
+
+		if(m->world->getState() == World::Lost)
+		{
+			m->exitTime = stateMachine->getTime() + 1.0;
+		}
+		else if(m->world->getState() == World::Won)
+		{
+			if(!Profile::getLevelName(Profile::getCurrentLevel() + 1).empty())
+			{
+				Profile::setCurrentLevel(Profile::getCurrentLevel() + 1);
+			}
+			else
+			{
+				Profile::setCurrentLevel(0);
+			}
+			m->exitTime = stateMachine->getTime() + 1.0;
+		}
+	}
+	else if(m->exitTime <= stateMachine->getTime())
+	{
 		stateMachine->requestState("menu");
 	}
 }
@@ -122,7 +133,20 @@ void GameState::update(StateMachine* stateMachine)
 void GameState::render(StateMachine* stateMachine)
 {
 	glViewport(0, 0, stateMachine->getFramebufferWidth(), stateMachine->getFramebufferHeight());
-	glClearColor(1.f, 0.9406f, 0.7969f, 1.f);
+	switch(m->world->getState())
+	{
+	case World::Playing:
+		glClearColor(1.f, 0.9406f, 0.7969f, 1.f);
+		break;
+
+	case World::Lost:
+		glClearColor(1.f, 0.5f, 0.5f, 1.f);
+		break;
+
+	case World::Won:
+		glClearColor(0.5f, 1.f, 0.5f, 1.f);
+		break;
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
