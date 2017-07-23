@@ -5,6 +5,9 @@
 class MenuState : public State
 {
 public:
+	MenuState();
+	~MenuState();
+
 	void enter(StateMachine* stateMachine) override;
 	void leave(StateMachine* stateMachine) override;
 
@@ -16,4 +19,6 @@ public:
 	void mouseMove(StateMachine* stateMachine, float x, float y) override;
 
 private:
+	struct PrivateData;
+	PrivateData* m;
 };

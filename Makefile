@@ -17,9 +17,10 @@ endif
 
 OBJS = $(addprefix build/,$(patsubst %.cpp,%.o,$(patsubst %.mm,%.o,$(SOURCES))))
 LEVELS = $(addprefix assets/,$(patsubst %.py,%.level,$(LEVEL_SOURCES)))
+LEVEL_INDEX = assets/levels/index
 EXE = build/l2p$(EXE_SUFFIX)
 
-all: $(EXE) $(LEVELS)
+all: $(EXE) $(LEVELS) $(LEVEL_INDEX)
 
 $(EXE): $(OBJS) Makefile
 	@echo Linking $(@F)
@@ -38,8 +39,14 @@ build/%.o: %.cpp Makefile
 	@$(CXX) -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $<
 	@$(CXX) -c -o $@ $(CXXFLAGS) $<
 
-assets/%.level: %.py levels/gen.py
+assets/%.level: %.py levels/gen.py Makefile
 	@echo Generating $(@F)
+	@mkdir -p $(@D)
 	@PYTHONPATH=levels python -B $< > $@
+
+$(LEVEL_INDEX): $(LEVELS) Makefile
+	@echo Generating the level index
+	@mkdir -p $(@D)
+	@echo $(sort $(LEVELS)) | tr " " "\n" > $@
 
 -include $(patsubst %.o,%.dep,$(OBJS))

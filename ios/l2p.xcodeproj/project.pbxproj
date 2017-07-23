@@ -21,6 +21,8 @@
 		0F5B32321EA1719300266FA6 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B32301EA1719300266FA6 /* GameState.cpp */; };
 		0F5E03691F1AAF8D00D9328D /* Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E03681F1AAF8D00D9328D /* Platform.mm */; };
 		0F5E036D1F20BFA900D9328D /* TextRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E036B1F20BFA900D9328D /* TextRenderer.cpp */; };
+		0F5E03721F24D9CD00D9328D /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E036E1F24D9CD00D9328D /* Profile.cpp */; };
+		0F5E03731F24D9CD00D9328D /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E03701F24D9CD00D9328D /* Util.cpp */; };
 		0F5F37E01EAFAA0C0027A884 /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F5F37DF1EAFAA0C0027A884 /* OpenGL.cpp */; };
 		0F6A19C31EA230250078DE96 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 0F6A19C21EA230250078DE96 /* assets */; };
 		0F9B558E1EA68482003E40CC /* Math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B558C1EA68482003E40CC /* Math.cpp */; };
@@ -58,6 +60,10 @@
 		0F5E036A1F20BF9700D9328D /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../common/Platform.h; sourceTree = "<group>"; };
 		0F5E036B1F20BFA900D9328D /* TextRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextRenderer.cpp; path = ../common/TextRenderer.cpp; sourceTree = "<group>"; };
 		0F5E036C1F20BFA900D9328D /* TextRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextRenderer.h; path = ../common/TextRenderer.h; sourceTree = "<group>"; };
+		0F5E036E1F24D9CD00D9328D /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Profile.cpp; path = ../common/Profile.cpp; sourceTree = "<group>"; };
+		0F5E036F1F24D9CD00D9328D /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Profile.h; path = ../common/Profile.h; sourceTree = "<group>"; };
+		0F5E03701F24D9CD00D9328D /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Util.cpp; path = ../common/Util.cpp; sourceTree = "<group>"; };
+		0F5E03711F24D9CD00D9328D /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Util.h; path = ../common/Util.h; sourceTree = "<group>"; };
 		0F5F37DF1EAFAA0C0027A884 /* OpenGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL.cpp; path = ../common/OpenGL.cpp; sourceTree = "<group>"; };
 		0F6A19C21EA230250078DE96 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
 		0F9B558C1EA68482003E40CC /* Math.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Math.cpp; path = ../common/Math.cpp; sourceTree = "<group>"; };
@@ -111,6 +117,10 @@
 		0F300D451EA146210059AA40 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0F5E036E1F24D9CD00D9328D /* Profile.cpp */,
+				0F5E036F1F24D9CD00D9328D /* Profile.h */,
+				0F5E03701F24D9CD00D9328D /* Util.cpp */,
+				0F5E03711F24D9CD00D9328D /* Util.h */,
 				0F5E036B1F20BFA900D9328D /* TextRenderer.cpp */,
 				0F5E036C1F20BFA900D9328D /* TextRenderer.h */,
 				0F5E036A1F20BF9700D9328D /* Platform.h */,
@@ -246,7 +256,9 @@
 				0F5B322F1EA170E400266FA6 /* StateMachine.cpp in Sources */,
 				0F5B322D1EA170E400266FA6 /* MenuState.cpp in Sources */,
 				0F5F37E01EAFAA0C0027A884 /* OpenGL.cpp in Sources */,
+				0F5E03731F24D9CD00D9328D /* Util.cpp in Sources */,
 				0FF458D61EA141C0004FAC7E /* main.mm in Sources */,
+				0F5E03721F24D9CD00D9328D /* Profile.cpp in Sources */,
 				0F5B322E1EA170E400266FA6 /* State.cpp in Sources */,
 				0F2222621EB7756B00394F35 /* Batcher.cpp in Sources */,
 				0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */,

@@ -1,45 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "World.h"
 #include "Batcher.h"
+#include "Util.h"
 
 #include <cassert>
 #include <cctype>
 #include <cmath>
 #include <cstring>
 #include <list>
-#include <string>
-
-std::list<std::string> getLines(const char* data, size_t size)
-{
-	std::list<std::string> lines;
-
-	const char* p = nullptr;
-	for(size_t i = 0; i < size; i++)
-	{
-		if(!p)
-		{
-			if(!isspace(data[i]))
-			{
-				p = data + i;
-			}
-		}
-		else
-		{
-			if(data[i] == '\n')
-			{
-				lines.push_back(std::string(p, i - (p - data)));
-				p = nullptr;
-			}
-		}
-	}
-
-	if(p)
-	{
-		lines.push_back(std::string(p, size - (p - data)));
-	}
-
-	return lines;
-}
 
 struct Enemy
 {
@@ -104,8 +72,8 @@ World::~World()
 
 void World::init(const void* data, size_t size)
 {
-	std::list<std::string> lines = getLines((const char*)data, size);
-	for(std::list<std::string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	std::vector<std::string> lines = getLines((const char*)data, size);
+	for(std::vector<std::string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 		char type[32];
 		if(sscanf(it->c_str(), "%s", type) == 1)

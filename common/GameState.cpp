@@ -4,6 +4,7 @@
 #include "File.h"
 #include "Math.h"
 #include "OpenGL.h"
+#include "Profile.h"
 #include "StateMachine.h"
 #include "World.h"
 
@@ -74,7 +75,7 @@ void GameState::enter(StateMachine* stateMachine)
 {
 	m->joystickActive = false;
 
-	File levelFile("assets/levels/level-1.level");
+	File levelFile(Profile::getLevelName(Profile::getCurrentLevel()).c_str());
 
 	m->world = new World;
 	m->world->init(levelFile.getData(), levelFile.getSize());
@@ -106,7 +107,15 @@ void GameState::update(StateMachine* stateMachine)
 	}
 	else if(m->world->getState() == World::Won)
 	{
-		stateMachine->requestState("test");
+		if(!Profile::getLevelName(Profile::getCurrentLevel() + 1).empty())
+		{
+			Profile::setCurrentLevel(Profile::getCurrentLevel() + 1);
+		}
+		else
+		{
+			Profile::setCurrentLevel(0);
+		}
+		stateMachine->requestState("menu");
 	}
 }
 

@@ -44,7 +44,7 @@ void Application::update(float width, float height)
 		m_stateMachine.addState("game", new GameState);
 		m_stateMachine.addState("menu", new MenuState);
 		m_stateMachine.addState("test", new TestState);
-		m_stateMachine.requestState("game");
+		m_stateMachine.requestState("menu");
 
 		m_startTime = m_lastUpdateTime = getMicroseconds();
 
