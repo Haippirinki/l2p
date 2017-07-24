@@ -15,6 +15,7 @@ struct Enemy
 	{
 		if(length(m_position) < m_speed * dt)
 		{
+			m_position = vec2::zero;
 			return false;
 		}
 
@@ -31,6 +32,8 @@ struct Enemy
 	float m_speed;
 	float m_radius;
 	vec4 m_color;
+	bool m_mayNotTouch;
+	bool m_mayNotPass;
 };
 
 static bool comparePendingEnemies(const std::pair<float, Enemy>& lhs, const std::pair<float, Enemy>& rhs)
@@ -85,7 +88,18 @@ void World::init(const void* data, size_t size)
 				assert(n == 4);
 
 				float a = 3.14159f * degrees / 180.f;
-				Enemy enemy = { { cosf(a) * distance, sinf(a) * distance }, speed, 0.05f,{ 0.f, speed - 0.5f, 1.f, 1.f } };
+				Enemy enemy = { { cosf(a) * distance, sinf(a) * distance }, speed, 0.05f,{ 0.f, speed - 0.5f, 1.f, 1.f }, true, false };
+				m->pendingEnemies.push_back(std::pair<float, Enemy>(time, enemy));
+			}
+
+			if(strcmp(type, "friendly") == 0)
+			{
+				float time, distance, degrees, speed;
+				int n = sscanf(it->c_str() + strlen(type), "%f %f %f %f", &time, &distance, &degrees, &speed);
+				assert(n == 4);
+
+				float a = 3.14159f * degrees / 180.f;
+				Enemy enemy = { { cosf(a) * distance, sinf(a) * distance }, speed, 0.05f,{ 1.f, 0.25f, 0.f, 1.f }, false, true };
 				m->pendingEnemies.push_back(std::pair<float, Enemy>(time, enemy));
 			}
 		}
@@ -111,16 +125,34 @@ void World::update(float dt)
 	{
 		if(!it->update(dt))
 		{
-			it = m->enemies.erase(it);
+			if(it->m_mayNotPass)
+			{
+				m->state = Lost;
+				it++;
+			}
+			else
+			{
+				it = m->enemies.erase(it);
+			}
 		}
 		else
 		{
 			if(length(it->m_position - m->playerPosition) < it->m_radius + m->playerRadius)
 			{
-				m->state = Lost;
+				if(it->m_mayNotPass)
+				{
+					it = m->enemies.erase(it);
+				}
+				else
+				{
+					m->state = Lost;
+					++it;
+				}
 			}
-
-			++it;
+			else
+			{
+				++it;
+			}
 		}
 	}
 
