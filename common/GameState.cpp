@@ -109,7 +109,7 @@ void GameState::update(StateMachine* stateMachine)
 
 		if(m->world->getState() == World::Lost)
 		{
-			m->exitTime = stateMachine->getTime() + 1.0;
+			m->exitTime = stateMachine->getTime() + 0.5;
 		}
 		else if(m->world->getState() == World::Won)
 		{
@@ -121,12 +121,15 @@ void GameState::update(StateMachine* stateMachine)
 			{
 				Profile::setCurrentLevel(0);
 			}
-			m->exitTime = stateMachine->getTime() + 1.0;
+			m->exitTime = stateMachine->getTime() + 0.5;
 		}
 	}
 	else if(m->exitTime <= stateMachine->getTime())
 	{
-		stateMachine->requestState("menu");
+		if(m->joystickActive)
+    {
+			stateMachine->requestState("menu");
+    }
 	}
 }
 
