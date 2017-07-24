@@ -54,6 +54,7 @@ struct World::PrivateData
 
 	std::list<std::pair<float, Enemy>> pendingEnemies;
 	std::list<Enemy> enemies;
+	std::list<vec2> playerPositionsList;
 };
 
 World::World() : m(new PrivateData)
@@ -111,6 +112,11 @@ void World::init(const void* data, size_t size)
 void World::update(float dt)
 {
 	m->playerVelocity = m->playerControl;
+	m->playerPositionsList.push_back(m->playerPosition);
+	if(m->playerPositionsList.size() > 10)
+	{
+		m->playerPositionsList.pop_front();
+	}
 	m->playerPosition += m->playerVelocity * dt;
 
 	m->time += dt;
@@ -167,6 +173,11 @@ void World::update(float dt)
 
 void World::render(Batcher& batcher) const
 {
+	for(vec2 n : m->playerPositionsList)
+	{
+		batcher.addCircle(n, 0.03f, { 0.663f, 0.663f, 0.663f, 1.f });
+	}
+
 	if(m->pendingEnemies.empty() && m->enemies.empty())
 	{
 		batcher.addCircle(vec2::zero, 0.05f, { 0.f, 0.f, 0.f, 1.f });
