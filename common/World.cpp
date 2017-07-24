@@ -118,7 +118,6 @@ void World::update(float dt)
 			if(length(it->m_position - m->playerPosition) < it->m_radius + m->playerRadius)
 			{
 				m->state = Lost;
-				return;
 			}
 
 			++it;
