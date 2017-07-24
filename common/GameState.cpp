@@ -124,13 +124,6 @@ void GameState::update(StateMachine* stateMachine)
 			m->exitTime = stateMachine->getTime() + 0.5;
 		}
 	}
-	else if(m->exitTime <= stateMachine->getTime())
-	{
-		if(m->joystickActive)
-    {
-			stateMachine->requestState("menu");
-    }
-	}
 }
 
 void GameState::render(StateMachine* stateMachine)
@@ -195,8 +188,15 @@ void GameState::render(StateMachine* stateMachine)
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
 {
-	m->joystickActive = true;
-	m->joystickCenter = m->joystickPosition = { x, y };
+	if(m->exitTime && m->exitTime <= stateMachine->getTime())
+	{
+		stateMachine->requestState("menu");
+	}
+	else
+	{
+		m->joystickActive = true;
+		m->joystickCenter = m->joystickPosition = { x, y };
+	}
 }
 
 void GameState::mouseUp(StateMachine* stateMachine, float x, float y)
