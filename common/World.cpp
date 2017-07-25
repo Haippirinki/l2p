@@ -48,6 +48,7 @@ struct World::PrivateData
 	vec2 playerPosition;
 	vec2 playerVelocity;
 	vec2 playerControl;
+	bool enemyUsedPortal;
 	float playerRadius;
 
 	float time;
@@ -65,6 +66,7 @@ World::World() : m(new PrivateData)
 	m->playerVelocity = vec2::zero;
 	m->playerControl = vec2::zero;
 	m->playerRadius = 0.05f;
+	m->enemyUsedPortal = false;
 
 	m->time = 0.f;
 }
@@ -138,6 +140,7 @@ void World::update(float dt)
 			}
 			else
 			{
+				m->enemyUsedPortal = true;
 				it = m->enemies.erase(it);
 			}
 		}
@@ -176,6 +179,12 @@ void World::render(Batcher& batcher) const
 	for(vec2 n : m->playerPositionsList)
 	{
 		batcher.addCircle(n, 0.03f, { 0.663f, 0.663f, 0.663f, 1.f });
+	}
+
+	if(m->enemyUsedPortal)
+	{
+		batcher.addCircle(vec2::zero, 0.08f, { 0.f, 0.f, 0.f, 1.f });
+		m->enemyUsedPortal = false;
 	}
 
 	if(m->pendingEnemies.empty() && m->enemies.empty())
