@@ -115,6 +115,17 @@ void World::init(const void* data, size_t size)
 void World::update(double t, float dt)
 {
 	m->playerVelocity = m->playerControl;
+	if(m->playerPosition == m->playerPositionsList.back())
+	{
+		if(m->state == Playing)
+		{
+			m->playerRadius += dt * 0.001f * 60.f;
+		}
+	}
+	else
+	{
+		m->playerRadius = PLAYER_RADIUS_DEFAULT;
+	}
 	m->playerPositionsList.push_back(m->playerPosition);
 	if(m->playerPositionsList.size() > 10)
 	{
@@ -201,18 +212,6 @@ void World::render(double t, Batcher& batcher) const
 		batcher.addCircle(vec2::zero, 0.05f, { 0.5f, 0.5f, 0.5f, 0.5f });
 	}
 
-	vec2 lastPosition = m->playerPositionsList.back();
-	if(m->playerPosition == lastPosition)
-	{
-		if(m->state == Playing)
-		{
-			m->playerRadius += 0.001f;
-		}
-	}
-	else
-	{
-		m->playerRadius = PLAYER_RADIUS_DEFAULT;
-	}
 	batcher.addCircle(m->playerPosition, m->playerRadius, { 1.f, 0.f, 0.f, 1.f });
 
 	for(std::list<Enemy>::const_iterator it = m->enemies.begin(); it != m->enemies.end(); ++it)
