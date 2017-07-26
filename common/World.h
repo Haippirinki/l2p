@@ -21,8 +21,8 @@ public:
 
 	void init(const void* data, size_t size);
 
-	void update(float dt);
-	void render(Batcher& batcher) const;
+	void update(double t, float dt);
+	void render(double t, Batcher& batcher) const;
 
 	void setControl(const vec2& control);
 

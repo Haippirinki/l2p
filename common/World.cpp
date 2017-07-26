@@ -9,6 +9,8 @@
 #include <cstring>
 #include <list>
 
+const double EFFECT_DURATION = 0.1;
+
 struct Enemy
 {
 	bool update(float dt)
@@ -48,9 +50,8 @@ struct World::PrivateData
 	vec2 playerPosition;
 	vec2 playerVelocity;
 	vec2 playerControl;
-	bool enemyUsedPortal;
+	double enemyUsedPortalTime;
 	float playerRadius;
-
 	float time;
 
 	std::list<std::pair<float, Enemy>> pendingEnemies;
@@ -66,8 +67,7 @@ World::World() : m(new PrivateData)
 	m->playerVelocity = vec2::zero;
 	m->playerControl = vec2::zero;
 	m->playerRadius = 0.05f;
-	m->enemyUsedPortal = false;
-
+	m->enemyUsedPortalTime = -EFFECT_DURATION;
 	m->time = 0.f;
 }
 
@@ -111,7 +111,7 @@ void World::init(const void* data, size_t size)
 	m->pendingEnemies.sort(comparePendingEnemies);
 }
 
-void World::update(float dt)
+void World::update(double t, float dt)
 {
 	m->playerVelocity = m->playerControl;
 	m->playerPositionsList.push_back(m->playerPosition);
@@ -140,7 +140,7 @@ void World::update(float dt)
 			}
 			else
 			{
-				m->enemyUsedPortal = true;
+				m->enemyUsedPortalTime = t;
 				it = m->enemies.erase(it);
 			}
 		}
@@ -174,17 +174,21 @@ void World::update(float dt)
 	}
 }
 
-void World::render(Batcher& batcher) const
+void World::render(double t, Batcher& batcher) const
 {
 	for(vec2 n : m->playerPositionsList)
 	{
 		batcher.addCircle(n, 0.03f, { 0.663f, 0.663f, 0.663f, 1.f });
 	}
 
-	if(m->enemyUsedPortal)
+	double timeSinceEffectBegan = t - m->enemyUsedPortalTime;
+	if(EFFECT_DURATION >= timeSinceEffectBegan)
 	{
-		batcher.addCircle(vec2::zero, 0.08f, { 0.f, 0.f, 0.f, 1.f });
-		m->enemyUsedPortal = false;
+		double phase = timeSinceEffectBegan / EFFECT_DURATION;
+		double startRadius = 0.05f;
+		double endRadius = 0.1f;
+		double radius = (1.0 - phase) * startRadius + phase * endRadius;
+		batcher.addCircle(vec2::zero, radius, { 0.f, 0.f, 0.f, 0.5f });
 	}
 
 	if(m->pendingEnemies.empty() && m->enemies.empty())
