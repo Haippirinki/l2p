@@ -105,7 +105,7 @@ void GameState::update(StateMachine* stateMachine)
 			m->world->setControl(vec2::zero);
 		}
 
-		m->world->update((float)stateMachine->getDeltaTime());
+		m->world->update(stateMachine->getTime(), (float)stateMachine->getDeltaTime());
 
 		if(m->world->getState() == World::Lost)
 		{
@@ -172,7 +172,7 @@ void GameState::render(StateMachine* stateMachine)
 
 	glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
 
-	m->world->render(m->batcher);
+	m->world->render(stateMachine->getTime(), m->batcher);
 
 	if(m->joystickActive)
 	{
