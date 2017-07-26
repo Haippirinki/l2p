@@ -10,6 +10,7 @@
 #include <list>
 
 const double EFFECT_DURATION = 0.1;
+const float PLAYER_RADIUS_DEFAULT = 0.05f;
 
 struct Enemy
 {
@@ -200,7 +201,19 @@ void World::render(double t, Batcher& batcher) const
 		batcher.addCircle(vec2::zero, 0.05f, { 0.5f, 0.5f, 0.5f, 0.5f });
 	}
 
-	batcher.addCircle(m->playerPosition, 0.05f, { 1.f, 0.f, 0.f, 1.f });
+	vec2 lastPosition = m->playerPositionsList.back();
+	if(m->playerPosition == lastPosition)
+	{
+		if(m->state == Playing)
+		{
+			m->playerRadius += 0.001f;
+		}
+	}
+	else
+	{
+		m->playerRadius = PLAYER_RADIUS_DEFAULT;
+	}
+	batcher.addCircle(m->playerPosition, m->playerRadius, { 1.f, 0.f, 0.f, 1.f });
 
 	for(std::list<Enemy>::const_iterator it = m->enemies.begin(); it != m->enemies.end(); ++it)
 	{
