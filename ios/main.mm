@@ -29,7 +29,10 @@ namespace Platform
 - (void)render:(CADisplayLink*)displayLink
 {
 	GLKView* view = [self.window.subviews objectAtIndex:0];
-	[view display];
+	if(view && [view isKindOfClass:[GLKView class]])
+	{
+		[view display];
+	}
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
