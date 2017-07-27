@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS 1
 #include "World.h"
 #include "Batcher.h"
 #include "Util.h"
@@ -9,7 +8,7 @@
 #include <cstring>
 #include <list>
 
-const double EFFECT_DURATION = 0.1;
+const float EFFECT_DURATION = 0.1f;
 
 struct Enemy
 {
@@ -181,13 +180,13 @@ void World::render(double t, Batcher& batcher) const
 		batcher.addCircle(n, 0.03f, { 0.663f, 0.663f, 0.663f, 1.f });
 	}
 
-	double timeSinceEffectBegan = t - m->enemyUsedPortalTime;
+	float timeSinceEffectBegan = float(t - m->enemyUsedPortalTime);
 	if(EFFECT_DURATION >= timeSinceEffectBegan)
 	{
-		double phase = timeSinceEffectBegan / EFFECT_DURATION;
-		double startRadius = 0.05f;
-		double endRadius = 0.1f;
-		double radius = (1.0 - phase) * startRadius + phase * endRadius;
+		float phase = timeSinceEffectBegan / EFFECT_DURATION;
+		float startRadius = 0.05f;
+		float endRadius = 0.1f;
+		float radius = (1.f - phase) * startRadius + phase * endRadius;
 		batcher.addCircle(vec2::zero, radius, { 0.f, 0.f, 0.f, 0.5f });
 	}
 
