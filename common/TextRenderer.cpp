@@ -6,52 +6,10 @@
 #include "OpenGL.h"
 
 #include <cassert>
+#include <codecvt>
 #include <cstring>
+#include <locale>
 #include <string>
-
-static unsigned int utf8ToUtf32(const unsigned char*& it, const unsigned char* end)
-{
-	size_t len = end - it;
-	const unsigned char* buf = it;
-	if(len >= 1)
-	{
-		if(buf[0] < 0x80)
-		{
-			it += 1;
-			return buf[0];
-		}
-		else if(len >= 1 && buf[0] >= 0xc2)
-		{
-			if(len >= 2 && buf[0] < 0xe0)
-			{
-				if((buf[1] & 0xc0) == 0x80)
-				{
-					it += 2;
-					return ((unsigned int)buf[0] << 6) + buf[1] - 0x3080;
-				}
-			}
-			else if(len >= 3 && buf[0] < 0xf0)
-			{
-				if((buf[1] & 0xc0) == 0x80 && (buf[2] & 0xc0) == 0x80 && !(buf[0] == 0xe0 && buf[1] < 0xa0))
-				{
-					it += 3;
-					return ((unsigned int)buf[0] << 12) + ((unsigned int)buf[1] << 6) + buf[2] - 0xe2080;
-				}
-			}
-			else if(len >= 4 && buf[0] < 0xf5)
-			{
-				if((buf[1] & 0xc0) == 0x80 && (buf[2] & 0xc0) == 0x80 && (buf[3] & 0xc0) == 0x80 && !(buf[0] == 0xf0 && buf[1] < 0x90) && !(buf[0] == 0xf4 && buf[1] >= 0x90))
-				{
-					it += 4;
-					return ((unsigned int)buf[0] << 18) + ((unsigned int)buf[1] << 12) + ((unsigned int)buf[2] << 6) + buf[3] - 0x3c82080;
-				}
-			}
-		}
-	}
-
-	it += 1;
-	return buf[0] + 0xdc00;
-}
 
 struct TextRenderer::PrivateData
 {
@@ -83,7 +41,7 @@ TextRenderer::TextRenderer(const char* font) : m(new PrivateData)
 
 	glBindTexture(m->textureBindTarget, m->texture);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glBindTexture(GL_TEXTURE_2D, previousTexture);
@@ -96,14 +54,15 @@ TextRenderer::~TextRenderer()
 
 void TextRenderer::addText(const char* text)
 {
-	size_t bytes = strlen(text);
-	const unsigned char* p = (const unsigned char*)text;
-	const unsigned char* end = p + bytes;
-	unsigned int previous = 0;
+#ifdef _MSC_VER
+	auto utf32 = std::wstring_convert<std::codecvt_utf8<unsigned int>, unsigned int>{}.from_bytes(text);
+#else
+	auto utf32 = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>{}.from_bytes(text);
+#endif
+	char32_t previous = 0;
 	vec2 cursor = { 0.f, 0.f };
-	while(p != end)
+	for(char32_t codepoint : utf32)
 	{
-		unsigned int codepoint = utf8ToUtf32(p, end);
 		cursor.x += m->font.getKerning(previous, codepoint);
 
 		if(codepoint == '\n')
