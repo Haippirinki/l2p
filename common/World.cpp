@@ -69,6 +69,7 @@ World::World() : m(new PrivateData)
 	m->playerControl = vec2::zero;
 	m->playerRadius = 0.05f;
 	m->enemyUsedPortalTime = -EFFECT_DURATION;
+	m->playerPositionsList.push_back(vec2::zero);
 	m->time = 0.f;
 }
 
