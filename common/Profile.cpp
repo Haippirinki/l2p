@@ -20,7 +20,7 @@ namespace Profile
 	{
 		File indexFile("assets/levels/index");
 		std::vector<std::string> levels = getLines((const char*)indexFile.getData(), indexFile.getSize());
-		if(level >= 0 && level < levels.size())
+		if(level >= 0 && level < (int)levels.size())
 		{
 			return levels[level];
 		}

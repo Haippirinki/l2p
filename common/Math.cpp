@@ -68,7 +68,7 @@ vec2 operator-(const vec2& v)
 
 float length(const vec2& v)
 {
-	return sqrt(v.x * v.x + v.y * v.y);
+	return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 vec2 normalize(const vec2& v)

@@ -6,7 +6,6 @@
 
 #include <common/Application.h>
 
-static bool g_shouldExit = false;
 static Application* g_application = nullptr;
 
 static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
