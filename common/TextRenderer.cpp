@@ -5,7 +5,9 @@
 #include "File.h"
 #include "OpenGL.h"
 
+#include <algorithm>
 #include <cassert>
+#include <cfloat>
 #include <codecvt>
 #include <cstring>
 #include <locale>
@@ -52,7 +54,7 @@ TextRenderer::~TextRenderer()
 	delete m;
 }
 
-void TextRenderer::addText(const char* text)
+void TextRenderer::addText(const char* text, float x, float y)
 {
 #ifdef _MSC_VER
 	auto utf32 = std::wstring_convert<std::codecvt_utf8<unsigned int>, unsigned int>{}.from_bytes(text);
@@ -60,14 +62,14 @@ void TextRenderer::addText(const char* text)
 	auto utf32 = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>{}.from_bytes(text);
 #endif
 	char32_t previous = 0;
-	vec2 cursor = { 0.f, 0.f };
+	vec2 cursor = { x, y };
 	for(char32_t codepoint : utf32)
 	{
 		cursor.x += m->font.getKerning(previous, codepoint);
 
 		if(codepoint == '\n')
 		{
-			cursor.x = 0.f;
+			cursor.x = x;
 			cursor.y += m->font.getLineHeight();
 		}
 		else
@@ -81,6 +83,53 @@ void TextRenderer::addText(const char* text)
 			vec2 uv1 = { float(c->x + c->width) / float(m->textureWidth), float(c->y + c->height) / float(m->textureHeight) };
 
 			m->batcher.addQuad(xy0, xy1, uv0, uv1);
+
+			cursor.x += c->xadvance;
+		}
+
+		previous = codepoint;
+	}
+}
+
+float TextRenderer::getLineHeight() const
+{
+	return (float)m->font.getLineHeight();
+}
+
+void TextRenderer::getTextSize(const char* text, float x, float y, float& minX, float& maxX, float& minY, float& maxY) const
+{
+	minX = FLT_MAX;
+	maxX = -FLT_MAX;
+	minY = FLT_MAX;
+	maxY = -FLT_MAX;
+
+#ifdef _MSC_VER
+	auto utf32 = std::wstring_convert<std::codecvt_utf8<unsigned int>, unsigned int>{}.from_bytes(text);
+#else
+	auto utf32 = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>{}.from_bytes(text);
+#endif
+	char32_t previous = 0;
+	vec2 cursor = { x, y };
+	for(char32_t codepoint : utf32)
+	{
+		cursor.x += m->font.getKerning(previous, codepoint);
+
+		if(codepoint == '\n')
+		{
+			cursor.x = x;
+			cursor.y += m->font.getLineHeight();
+		}
+		else
+		{
+			const BitmapFont::Character* c = m->font.getCharacter(codepoint);
+
+			vec2 xy0 = { float(cursor.x + c->xoffset), float(cursor.y + c->yoffset) };
+			vec2 xy1 = { float(cursor.x + c->xoffset + c->width), float(cursor.y + c->yoffset + c->height) };
+
+			minX = std::min(xy0.x, minX);
+			maxX = std::max(xy1.x, maxX);
+			minY = std::min(xy0.y, minY);
+			maxY = std::max(xy1.y, maxY);
 
 			cursor.x += c->xadvance;
 		}

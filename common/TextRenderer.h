@@ -6,7 +6,10 @@ public:
 	TextRenderer(const char* font);
 	~TextRenderer();
 
-	void addText(const char* text);
+	void addText(const char* text, float x, float y);
+
+	float getLineHeight() const;
+	void getTextSize(const char* text, float x, float y, float& minX, float& maxX, float& minY, float& maxY) const;
 
 	void flush();
 
