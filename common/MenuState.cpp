@@ -26,7 +26,7 @@ MenuState::MenuState() : m(new PrivateData)
 	glUseProgram(m->shaderProgram);
 	glUniform1i(glGetUniformLocation(m->shaderProgram, "u_sampler"), 0);
 
-	m->textRenderer = std::unique_ptr<TextRenderer>(new TextRenderer("eurostile_extended_18px"));
+	m->textRenderer = std::unique_ptr<TextRenderer>(new TextRenderer("opensans_semibold_100px_3px_outline"));
 }
 
 MenuState::~MenuState()
@@ -48,8 +48,11 @@ void MenuState::update(StateMachine* stateMachine)
 
 void MenuState::render(StateMachine* stateMachine)
 {
+	const float SCREEN_WIDTH = 1920.f;
+	const float SCREEN_HEIGHT = 1920.f * (float)stateMachine->getFramebufferHeight() / (float)stateMachine->getFramebufferWidth();
+
 	glViewport(0, 0, stateMachine->getFramebufferWidth(), stateMachine->getFramebufferHeight());
-	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
@@ -57,27 +60,32 @@ void MenuState::render(StateMachine* stateMachine)
 
 	glUseProgram(m->shaderProgram);
 
-	const float s = 2.f;
+	const float s = float(stateMachine->getFramebufferWidth()) / SCREEN_WIDTH;
 	float mvp[] = {
-		s / float(stateMachine->getFramebufferWidth()), 0.f, 0.f, 0.f,
-		0.f, -s / float(stateMachine->getFramebufferHeight()), 0.f, 0.f,
+		2.f * s / float(stateMachine->getFramebufferWidth()), 0.f, 0.f, 0.f,
+		0.f, -2.f * s / float(stateMachine->getFramebufferHeight()), 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		-1.f, 1.f, 0.f, 1.f
 	};
 	glUniformMatrix4fv(glGetUniformLocation(m->shaderProgram, "u_modelViewProjection"), 1, GL_FALSE, mvp);
 
-	std::string text(u8"l2p\nhaippirinki");
+	float minX, maxX, minY, maxY;
+
+	m->textRenderer->getTextSize("l2p", 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText("l2p", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
+
+	m->textRenderer->getTextSize("haippirinki", 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText("haippirinki", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 1.f * m->textRenderer->getLineHeight());
 
 	char buf[64];
 #ifdef _MSC_VER
-	sprintf_s(buf, "\n\ncurrent level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
+	sprintf_s(buf, "current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
 #else
-	snprintf(buf, sizeof(buf), "\n\ncurrent level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
+	snprintf(buf, sizeof(buf), "current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
 #endif
-	text += buf;
-	text += u8"\n\nI ♡ Unicode";
 
-	m->textRenderer->addText(text.c_str());
+	m->textRenderer->getTextSize(buf, 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText(buf, (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 1.f * m->textRenderer->getLineHeight());
 
 	m->textRenderer->flush();
 }
