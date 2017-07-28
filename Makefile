@@ -31,13 +31,13 @@ build/%.o: %.mm Makefile
 	@echo Compiling $(<F)
 	@mkdir -p $(@D)
 	@$(CXX) -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $<
-	@$(CXX) -c -o $@ $(CXXFLAGS) $<
+	@$(CXX) -c -Wall -Wfloat-conversion -o $@ $(CXXFLAGS) $<
 
 build/%.o: %.cpp Makefile
 	@echo Compiling $(<F)
 	@mkdir -p $(@D)
 	@$(CXX) -M -MP -MT $@ -MF $(patsubst %.o,%.dep,$@) $(CXXFLAGS) $<
-	@$(CXX) -c -o $@ $(CXXFLAGS) $<
+	@$(CXX) -c -Wall -Wfloat-conversion -o $@ $(CXXFLAGS) $<
 
 assets/%.level: %.py levels/gen.py Makefile
 	@echo Generating $(@F)
