@@ -26,4 +26,11 @@ namespace Profile
 		}
 		return "";
 	}
+
+	std::string getLevelDescription(int level)
+	{
+		File levelFile(getLevelName(level).c_str());
+		std::vector<std::string> desc = getLines((const char*)levelFile.getData(), levelFile.getSize());
+		return desc[0];
+	}
 }
