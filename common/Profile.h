@@ -8,4 +8,5 @@ namespace Profile
 	void setCurrentLevel(int level);
 
 	std::string getLevelName(int level);
+	std::string getLevelDescription(int level);
 }

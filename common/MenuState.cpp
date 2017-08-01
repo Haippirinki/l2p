@@ -78,14 +78,19 @@ void MenuState::render(StateMachine* stateMachine)
 	m->textRenderer->addText("haippirinki", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 1.f * m->textRenderer->getLineHeight());
 
 	char buf[64];
+	char descBuf[64];
 #ifdef _MSC_VER
 	sprintf_s(buf, "current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
+	sprintf_s(descBuf, "\"%s\"", Profile::getLevelDescription(Profile::getCurrentLevel()).c_str());
 #else
 	snprintf(buf, sizeof(buf), "current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
+	snprintf(descBuf, sizeof(descBuf), "\"%s\"", Profile::getLevelDescription(Profile::getCurrentLevel()).c_str());
 #endif
 
 	m->textRenderer->getTextSize(buf, 0.f, 0.f, minX, maxX, minY, maxY);
 	m->textRenderer->addText(buf, (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 1.f * m->textRenderer->getLineHeight());
+	m->textRenderer->getTextSize(descBuf, 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText(descBuf, (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 2.f * m->textRenderer->getLineHeight());
 
 	m->textRenderer->flush();
 }
