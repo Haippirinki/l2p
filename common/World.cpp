@@ -78,7 +78,7 @@ World::~World()
 void World::init(const void* data, size_t size)
 {
 	std::vector<std::string> lines = getLines((const char*)data, size);
-	for(std::vector<std::string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	for(std::vector<std::string>::const_iterator it = lines.begin() + 1; it != lines.end(); ++it)
 	{
 		char type[32];
 		if(sscanf(it->c_str(), "%s", type) == 1)
