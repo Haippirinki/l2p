@@ -4,6 +4,7 @@
 #include "Profile.h"
 #include "StateMachine.h"
 #include "TextRenderer.h"
+#include "Util.h"
 
 #include <memory>
 
@@ -77,20 +78,13 @@ void MenuState::render(StateMachine* stateMachine)
 	m->textRenderer->getTextSize("haippirinki", 0.f, 0.f, minX, maxX, minY, maxY);
 	m->textRenderer->addText("haippirinki", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 1.f * m->textRenderer->getLineHeight());
 
-	char buf[64];
-	char descBuf[64];
-#ifdef _MSC_VER
-	sprintf_s(buf, "current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
-	sprintf_s(descBuf, "\"%s\"", Profile::getLevelDescription(Profile::getCurrentLevel()).c_str());
-#else
-	snprintf(buf, sizeof(buf), "current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
-	snprintf(descBuf, sizeof(descBuf), "\"%s\"", Profile::getLevelDescription(Profile::getCurrentLevel()).c_str());
-#endif
+	std::string level = format("current level: %d %s", Profile::getCurrentLevel(), Profile::getLevelName(Profile::getCurrentLevel()).c_str());
+	std::string desc = format("\"%s\"", Profile::getLevelDescription(Profile::getCurrentLevel()).c_str());
 
-	m->textRenderer->getTextSize(buf, 0.f, 0.f, minX, maxX, minY, maxY);
-	m->textRenderer->addText(buf, (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 1.f * m->textRenderer->getLineHeight());
-	m->textRenderer->getTextSize(descBuf, 0.f, 0.f, minX, maxX, minY, maxY);
-	m->textRenderer->addText(descBuf, (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 2.f * m->textRenderer->getLineHeight());
+	m->textRenderer->getTextSize(level.c_str(), 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText(level.c_str(), (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 1.f * m->textRenderer->getLineHeight());
+	m->textRenderer->getTextSize(desc.c_str(), 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText(desc.c_str(), (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f + 2.f * m->textRenderer->getLineHeight());
 
 	m->textRenderer->flush();
 }
