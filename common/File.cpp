@@ -48,7 +48,7 @@ File::File(const char* path)
 	{
 		struct stat buf;
 		fstat(m_file, &buf);
-		m_size = buf.st_size;
+		m_size = (size_t)buf.st_size;
 		m_data = mmap(nullptr, m_size, PROT_READ, MAP_PRIVATE, m_file, 0);
 	}
 	else
