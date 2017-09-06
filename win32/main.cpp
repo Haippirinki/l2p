@@ -109,6 +109,9 @@ int main(int argc, char** argv)
 
 	setup_GL_3_3();
 
+	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+	wglSwapIntervalEXT(1);
+
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
 	g_application = new Application;
