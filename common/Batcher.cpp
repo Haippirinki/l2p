@@ -1,7 +1,9 @@
 #include "Batcher.h"
-#include "OpenGL.h"
+
+#include "Render/Device.h"
 
 #include <cmath>
+#include <cstring>
 #include <vector>
 
 struct Vertex
@@ -15,29 +17,29 @@ struct Vertex
 struct Batcher::PrivateData
 {
 	std::vector<Vertex> vertices;
-	GLuint vertexArray;
-	GLuint vertexBuffer;
+
+	Render::VertexBuffer* vertexBuffer;
+	Render::VertexArray* vertexArray;
 };
 
-
-Batcher::Batcher() : m(new PrivateData)
+Batcher::Batcher(Render::Device* device) : m(new PrivateData)
 {
-	glGenVertexArrays(1, &m->vertexArray);
-	glBindVertexArray(m->vertexArray);
+	Render::VertexFormat vertexFormat;
+	vertexFormat.addAttribute(Render::VertexInputType::F32, 2, false, Render::VertexAttributeType::Float);
+	vertexFormat.addAttribute(Render::VertexInputType::F32, 2, false, Render::VertexAttributeType::Float);
+	vertexFormat.addAttribute(Render::VertexInputType::F32, 4, false, Render::VertexAttributeType::Float);
+	vertexFormat.addAttribute(Render::VertexInputType::F32, 3, false, Render::VertexAttributeType::Float);
 
-	glGenBuffers(1, &m->vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer);
+	m->vertexBuffer = device->createVertexBuffer(3 * 65536 * sizeof(Vertex), Render::BufferUsage::Stream, vertexFormat, nullptr);
+	m->vertexArray = device->createVertexArray(m->vertexBuffer);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, position));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, uv));
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, colorMul));
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, colorAdd));
+	m->vertices.reserve(3 * 65536);
 }
 
 Batcher::~Batcher()
 {
-	glDeleteBuffers(1, &m->vertexBuffer);
-	glDeleteVertexArrays(1, &m->vertexArray);
+	delete m->vertexArray;
+	delete m->vertexBuffer;
 
 	delete m;
 }
@@ -81,21 +83,19 @@ void Batcher::addCircle(const vec2& center, float radius, const vec4& colorMul, 
 	}
 }
 
-void Batcher::flush()
+void Batcher::flush(Render::Device* device)
 {
 	if(!m->vertices.empty())
 	{
-		glBindVertexArray(m->vertexArray);
-		glBindBuffer(GL_ARRAY_BUFFER, m->vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m->vertices.size(), m->vertices.data(), GL_STREAM_DRAW);
+		Vertex* p = (Vertex*)device->mapVertexBuffer(m->vertexBuffer, Render::BufferAccess::WriteInvalidateBuffer);
+		memcpy(p, m->vertices.data(), 3 * 65536 * sizeof(Vertex));
+		device->unmapVertexBuffer(m->vertexBuffer);
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
+		device->bindVertexArray(m->vertexArray);
 
-		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m->vertices.size());
+		device->draw(Render::Topology::Triangles, m->vertices.size(), 0);
 
 		m->vertices.clear();
+		m->vertices.reserve(3 * 65536);
 	}
 }

@@ -1,9 +1,14 @@
 #pragma once
 
+namespace Render
+{
+	class Device;
+}
+
 class TextRenderer
 {
 public:
-	TextRenderer(const char* font);
+	TextRenderer(Render::Device* device, const char* font);
 	~TextRenderer();
 
 	void addText(const char* text, float x, float y);
@@ -11,7 +16,7 @@ public:
 	float getLineHeight() const;
 	void getTextSize(const char* text, float x, float y, float& minX, float& maxX, float& minY, float& maxY) const;
 
-	void flush();
+	void flush(Render::Device* device);
 
 private:
 	struct PrivateData;

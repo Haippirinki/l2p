@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 3.4.1)
 include_directories(../.. ${ANDROID_NDK}/sources/android/native_app_glue)
 
 aux_source_directory(../../common common-src)
+aux_source_directory(../../common/Render common-render-src)
 
 add_library(
 	native-lib
 	SHARED
 	src/main/cpp/main.cpp
 	src/main/cpp/Platform.cpp
-	${common-src})
+	${common-src}
+	${common-render-src})
 
 add_library(
 	native-app-glue

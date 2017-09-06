@@ -1,7 +1,10 @@
 #pragma once
 
-#include <map>
-#include <string>
+namespace Render
+{
+	class Device;
+	class RenderTarget;
+}
 
 class State;
 
@@ -12,32 +15,22 @@ public:
 	~StateMachine();
 
 	void update(float width, float height, double t, double dt);
-	void render(int width, int height);
+	void render(Render::Device* device, const Render::RenderTarget* renderTarget);
 
-	void addState(const std::string& name, State* state);
-	void requestState(const std::string& name);
+	void addState(const char* name, State* state);
+	void requestState(const char* name);
 
-	double getTime() const { return m_t; }
-	double getDeltaTime() const { return m_dt; }
+	double getTime() const;
+	double getDeltaTime() const;
 
-	float getWindowWidth() const { return m_windowWidth; }
-	float getWindowHeight() const { return m_windowHeight; }
-
-	int getFramebufferWidth() const { return m_framebufferWidth; }
-	int getFramebufferHeight() const { return m_framebufferHeight; }
+	float getWindowWidth() const;
+	float getWindowHeight() const;
 
 	void mouseDown(float x, float y);
 	void mouseUp(float x, float y);
 	void mouseMove(float x, float y);
 
 private:
-	std::map<std::string, State*> m_state;
-	std::string m_requestedState;
-	State* m_activeState;
-	double m_t;
-	double m_dt;
-	float m_windowWidth;
-	float m_windowHeight;
-	int m_framebufferWidth;
-	int m_framebufferHeight;
+	struct PrivateData;
+	PrivateData* m;
 };

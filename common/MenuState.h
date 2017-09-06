@@ -5,14 +5,14 @@
 class MenuState : public State
 {
 public:
-	MenuState();
+	MenuState(Render::Device* device);
 	~MenuState();
 
 	void enter(StateMachine* stateMachine) override;
 	void leave(StateMachine* stateMachine) override;
 
 	void update(StateMachine* stateMachine) override;
-	void render(StateMachine* stateMachine) override;
+	void render(StateMachine* stateMachine, Render::Device* device, const Render::RenderTarget* renderTarget) override;
 
 	void mouseDown(StateMachine* stateMachine, float x, float y) override;
 	void mouseUp(StateMachine* stateMachine, float x, float y) override;

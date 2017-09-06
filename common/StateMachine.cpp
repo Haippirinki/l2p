@@ -1,73 +1,116 @@
 #include "StateMachine.h"
 #include "State.h"
+#include "Render/Device.h"
 
-StateMachine::StateMachine() : m_activeState(nullptr), m_t(0.0), m_dt(0.0), m_windowWidth(0.f), m_windowHeight(0.f), m_framebufferWidth(0), m_framebufferHeight(0)
+#include <map>
+#include <string>
+
+struct StateMachine::PrivateData
 {
+	std::map<std::string, State*> state;
+	std::string requestedState;
+	State* activeState;
+	double t;
+	double dt;
+	float windowWidth;
+	float windowHeight;
+	int framebufferWidth;
+	int framebufferHeight;
+};
+
+StateMachine::StateMachine() : m(new PrivateData)
+{
+	m->activeState = nullptr;
+	m->t = 0.0;
+	m->dt = 0.0;
+	m->windowWidth = 0.f;
+	m->windowHeight = 0.f;
+	m->framebufferWidth = 0;
+	m->framebufferHeight = 0;
 }
 
 StateMachine::~StateMachine()
 {
+	delete m;
 }
 
 void StateMachine::update(float width, float height, double t, double dt)
 {
-	m_windowWidth = width;
-	m_windowHeight = height;
-	m_t = t;
-	m_dt = dt;
+	m->windowWidth = width;
+	m->windowHeight = height;
+	m->t = t;
+	m->dt = dt;
 
-	if(!m_requestedState.empty())
+	if(!m->requestedState.empty())
 	{
-		if(m_activeState)
+		if(m->activeState)
 		{
-			m_activeState->leave(this);
+			m->activeState->leave(this);
 		}
 
-		m_activeState = m_state[m_requestedState];
-		m_activeState->enter(this);
-		m_requestedState.clear();
+		m->activeState = m->state[m->requestedState];
+		m->activeState->enter(this);
+		m->requestedState.clear();
 	}
 
-	m_activeState->update(this);
+	m->activeState->update(this);
 }
 
-void StateMachine::render(int width, int height)
+void StateMachine::render(Render::Device* device, const Render::RenderTarget* renderTarget)
 {
-	m_framebufferWidth = width;
-	m_framebufferHeight = height;
-	m_activeState->render(this);
+	m->activeState->render(this, device, renderTarget);
 }
 
-void StateMachine::addState(const std::string& name, State* state)
+void StateMachine::addState(const char* name, State* state)
 {
-	m_state[name] = state;
+	m->state[name] = state;
 }
 
-void StateMachine::requestState(const std::string& name)
+void StateMachine::requestState(const char* name)
 {
-	m_requestedState = name;
+	m->requestedState = name;
+}
+
+double StateMachine::getTime() const
+{
+	return m->t;
+}
+
+double StateMachine::getDeltaTime() const
+{
+	return m->dt;
+}
+
+float StateMachine::getWindowWidth() const
+{
+	return m->windowWidth;
+}
+
+float StateMachine::getWindowHeight() const
+{
+	return m->windowHeight;
 }
 
 void StateMachine::mouseDown(float x, float y)
 {
-	if(m_activeState)
+	if(m->activeState)
 	{
-		m_activeState->mouseDown(this, x, y);
+		m->activeState->mouseDown(this, x, y);
 	}
 }
 
 void StateMachine::mouseUp(float x, float y)
 {
-	if(m_activeState)
+	if(m->activeState)
 	{
-		m_activeState->mouseUp(this, x, y);
+		m->activeState->mouseUp(this, x, y);
 	}
 }
 
 void StateMachine::mouseMove(float x, float y)
 {
-	if(m_activeState)
+	if(m->activeState)
 	{
-		m_activeState->mouseMove(this, x, y);
+		m->activeState->mouseMove(this, x, y);
 	}
 }

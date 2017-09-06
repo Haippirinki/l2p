@@ -3,7 +3,8 @@
 #include "BitmapFont.h"
 #include "DDSLoader.h"
 #include "File.h"
-#include "OpenGL.h"
+
+#include "Render/Device.h"
 
 #include <algorithm>
 #include <cassert>
@@ -15,18 +16,15 @@
 
 struct TextRenderer::PrivateData
 {
-	Batcher batcher;
+	Batcher* batcher;
 
 	BitmapFont font;
 
-	GLuint texture;
-	size_t textureWidth;
-	size_t textureHeight;
-	size_t textureDepth;
-	GLenum textureBindTarget;
+	const Render::Sampler* sampler;
+	Render::Texture* texture;
 };
 
-TextRenderer::TextRenderer(const char* font) : m(new PrivateData)
+TextRenderer::TextRenderer(Render::Device* device, const char* font) : m(new PrivateData)
 {
 	File fontFile((std::string("assets/fonts/") + std::string(font) + std::string(".fnt")).c_str());
 	m->font.init(fontFile.getData(), fontFile.getSize());
@@ -34,23 +32,21 @@ TextRenderer::TextRenderer(const char* font) : m(new PrivateData)
 	assert(m->font.getNumPages() == 1);
 	File fontTextureFile((std::string("assets/fonts/") + std::string(m->font.getPageName(0))).c_str());
 
-	m->texture = loadDDS(fontTextureFile.getData(), fontTextureFile.getSize(), true, m->textureWidth, m->textureHeight, m->textureDepth, m->textureBindTarget);
+	Render::SamplerDesc samplerDesc;
+	samplerDesc.setMinFilter(Render::TextureMinFilter::LinearMipmapLinear);
+	samplerDesc.setMagFilter(Render::TextureMagFilter::Linear);
+	m->sampler = device->createSampler(samplerDesc);
 
-	glActiveTexture(GL_TEXTURE0);
+	m->texture = device->createTexture(fontTextureFile.getData(), fontTextureFile.getSize(), true);
 
-	GLint previousTexture;
-	glGetIntegerv(GL_TEXTURE_BINDING_2D, &previousTexture);
-
-	glBindTexture(m->textureBindTarget, m->texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D, previousTexture);
+	m->batcher = new Batcher(device);
 }
 
 TextRenderer::~TextRenderer()
 {
+	delete m->texture;
+	delete m->batcher;
+
 	delete m;
 }
 
@@ -79,10 +75,10 @@ void TextRenderer::addText(const char* text, float x, float y)
 			vec2 xy0 = { float(cursor.x + c->xoffset), float(cursor.y + c->yoffset) };
 			vec2 xy1 = { float(cursor.x + c->xoffset + c->width), float(cursor.y + c->yoffset + c->height) };
 
-			vec2 uv0 = { float(c->x) / float(m->textureWidth), float(c->y) / float(m->textureHeight) };
-			vec2 uv1 = { float(c->x + c->width) / float(m->textureWidth), float(c->y + c->height) / float(m->textureHeight) };
+			vec2 uv0 = { float(c->x) / float(m->texture->getWidth()), float(c->y) / float(m->texture->getHeight()) };
+			vec2 uv1 = { float(c->x + c->width) / float(m->texture->getWidth()), float(c->y + c->height) / float(m->texture->getHeight()) };
 
-			m->batcher.addQuad(xy0, xy1, uv0, uv1);
+			m->batcher->addQuad(xy0, xy1, uv0, uv1);
 
 			cursor.x += c->xadvance;
 		}
@@ -138,9 +134,10 @@ void TextRenderer::getTextSize(const char* text, float x, float y, float& minX, 
 	}
 }
 
-void TextRenderer::flush()
+void TextRenderer::flush(Render::Device* device)
 {
-	glBindTexture(m->textureBindTarget, m->texture);
+	device->bindSampler(0, m->sampler);
+	device->bindTexture(0, m->texture);
 
-	m->batcher.flush();
+	m->batcher->flush(device);
 }

@@ -22,6 +22,12 @@
 
 #include <cstddef>
 
+#ifndef GL_EXT_texture_filter_anisotropic
+#define GL_EXT_texture_filter_anisotropic 1
+#define GL_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
+#define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
+#endif
+
 extern const char* glslVersion;
 
 GLuint createShader(GLenum type, const void* data, size_t size);

@@ -3,10 +3,11 @@
 #include "DDSLoader.h"
 #include "File.h"
 #include "Math.h"
-#include "OpenGL.h"
 #include "Profile.h"
 #include "StateMachine.h"
 #include "World.h"
+
+#include "Render/Device.h"
 
 static vec2 windowToView(StateMachine* stateMachine, const vec2& p)
 {
@@ -24,11 +25,24 @@ static vec2 viewToWindow(StateMachine* stateMachine, const vec2& p)
 	return { 0.5f * (p.x * ws + ww), 0.5f * (wh - p.y * ws) };
 }
 
+struct Uniforms
+{
+	float mvp[16];
+};
+
 struct GameState::PrivateData
 {
-	GLuint shaderProgram;
-	GLuint whiteTexture;
-	Batcher batcher;
+	const Render::BlendState* blendState;
+	const Render::DepthStencilState* depthStencilState;
+	const Render::RasterizerState* rasterizerState;
+
+	Render::ShaderProgram* shaderProgram;
+	Render::UniformBuffer* uniformBuffer;
+
+	const Render::Sampler* sampler;
+	Render::Texture* texture;
+
+	Batcher* batcher;
 
 	float joystickAreaRadius;
 	float joystickStickRadius;
@@ -43,23 +57,45 @@ struct GameState::PrivateData
 	double exitTime;
 };
 
-GameState::GameState() : m(new PrivateData)
+GameState::GameState(Render::Device* device) : m(new PrivateData)
 {
+	Render::BlendDesc blendDesc;
+	blendDesc.setBlendEnabled(true);
+	blendDesc.setColorSourceFactor(Render::BlendSourceFactor::SourceAlpha);
+	blendDesc.setColorDestinationFactor(Render::BlendDestinationFactor::OneMinusSourceAlpha);
+	m->blendState = device->createBlendState(blendDesc);
+
+	Render::DepthStencilDesc depthStencilDesc;
+	depthStencilDesc.setDepthTestEnabled(false);
+	depthStencilDesc.setDepthWriteEnabled(false);
+	m->depthStencilState = device->createDepthStencilState(depthStencilDesc);
+
+	Render::RasterizerDesc rasterizerDesc;
+	rasterizerDesc.setCullMode(Render::CullMode::Back);
+	m->rasterizerState = device->createRasterizerState(rasterizerDesc);
+
 	File vsFile("assets/shaders/game.vs");
-	GLuint vs = createShader(GL_VERTEX_SHADER, vsFile.getData(), vsFile.getSize());
+	Render::VertexShader* vs = device->createVertexShader(vsFile.getData(), vsFile.getSize());
 
 	File fsFile("assets/shaders/game.fs");
-	GLuint fs = createShader(GL_FRAGMENT_SHADER, fsFile.getData(), fsFile.getSize());
+	Render::FragmentShader* fs = device->createFragmentShader(fsFile.getData(), fsFile.getSize());
 
-	m->shaderProgram = createProgram(vs, fs);
-	glUseProgram(m->shaderProgram);
-	glUniform1i(glGetUniformLocation(m->shaderProgram, "u_sampler"), 0);
+	m->shaderProgram = device->createShaderProgram(vs, fs);
+	m->shaderProgram->setUniformBufferBinding("Uniforms", 0);
+	m->shaderProgram->setSamplerBinding("u_sampler", 0);
 
-	size_t width, height, depth;
-	GLenum bindTarget;
+	delete vs;
+	delete fs;
 
-	File whiteTextureFile("assets/images/white.dds");
-	m->whiteTexture = loadDDS(whiteTextureFile.getData(), whiteTextureFile.getSize(), true, width, height, depth, bindTarget);
+	m->uniformBuffer = device->createUniformBuffer(sizeof(Uniforms), Render::BufferUsage::Dynamic, nullptr);
+
+	Render::SamplerDesc samplerDesc;
+	m->sampler = device->createSampler(samplerDesc);
+
+	File textureFile("assets/images/white.dds");
+	m->texture = device->createTexture(textureFile.getData(), textureFile.getSize(), true);
+
+	m->batcher = new Batcher(device);
 
 	m->joystickAreaRadius = 0.2f;
 	m->joystickStickRadius = 0.1f;
@@ -70,6 +106,10 @@ GameState::GameState() : m(new PrivateData)
 
 GameState::~GameState()
 {
+	delete m->batcher;
+	delete m->texture;
+	delete m->shaderProgram;
+
 	delete m;
 }
 
@@ -126,64 +166,78 @@ void GameState::update(StateMachine* stateMachine)
 	}
 }
 
-void GameState::render(StateMachine* stateMachine)
+void GameState::render(StateMachine* stateMachine, Render::Device* device, const Render::RenderTarget* renderTarget)
 {
-	glViewport(0, 0, stateMachine->getFramebufferWidth(), stateMachine->getFramebufferHeight());
+	device->setViewport(0, 0, renderTarget->getWidth(), renderTarget->getHeight());
 	switch(m->world->getState())
 	{
 	case World::Playing:
-		glClearColor(1.f, 0.9406f, 0.7969f, 1.f);
+		device->clearRenderTargetColor(1.f, 0.9406f, 0.7969f, 1.f);
 		break;
 
 	case World::Lost:
-		glClearColor(1.f, 0.5f, 0.5f, 1.f);
+		device->clearRenderTargetColor(1.f, 0.5f, 0.5f, 1.f);
 		break;
 
 	case World::Won:
-		glClearColor(0.5f, 1.f, 0.5f, 1.f);
+		device->clearRenderTargetColor(0.5f, 1.f, 0.5f, 1.f);
 		break;
 	}
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glUseProgram(m->shaderProgram);
 
 	float sx, sy;
-	if(stateMachine->getFramebufferWidth() > stateMachine->getFramebufferHeight())
+	if(renderTarget->getWidth() > renderTarget->getHeight())
 	{
-		sx = float(stateMachine->getFramebufferHeight()) / float(stateMachine->getFramebufferWidth());
+		sx = float(renderTarget->getHeight()) / float(renderTarget->getWidth());
 		sy = 1.f;
 	}
 	else
 	{
 		sx = 1.f;
-		sy = float(stateMachine->getFramebufferWidth()) / float(stateMachine->getFramebufferHeight());
+		sy = float(renderTarget->getWidth()) / float(renderTarget->getHeight());
 	}
 
-	float mvp[] = {
-		sx, 0.f, 0.f, 0.f,
-		0.f, sy, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f
-	};
-	glUniformMatrix4fv(glGetUniformLocation(m->shaderProgram, "u_modelViewProjection"), 1, GL_FALSE, mvp);
+	Uniforms* uniforms = (Uniforms*)device->mapUniformBuffer(m->uniformBuffer, Render::BufferAccess::WriteInvalidateBuffer);
+	uniforms->mvp[0] = sx;
+	uniforms->mvp[1] = 0.f;
+	uniforms->mvp[2] = 0.f;
+	uniforms->mvp[3] = 0.f,
+	uniforms->mvp[4] = 0.f;
+	uniforms->mvp[5] = sy;
+	uniforms->mvp[6] = 0.f;
+	uniforms->mvp[7] = 0.f;
+	uniforms->mvp[8] = 0.f;
+	uniforms->mvp[9] = 0.f;
+	uniforms->mvp[10] = 1.f;
+	uniforms->mvp[11] = 0.f;
+	uniforms->mvp[12] = 0.f;
+	uniforms->mvp[13] = 0.f;
+	uniforms->mvp[14] = 0.f;
+	uniforms->mvp[15] = 1.f;
+	device->unmapUniformBuffer(m->uniformBuffer);
 
-	glBindTexture(GL_TEXTURE_2D, m->whiteTexture);
+	device->bindUniformBuffer(0, m->uniformBuffer);
 
-	m->world->render(stateMachine->getTime(), m->batcher);
+	device->bindBlendState(m->blendState);
+	device->bindDepthStencilState(m->depthStencilState);
+	device->bindRasterizerState(m->rasterizerState);
+
+	device->bindShaderProgram(m->shaderProgram);
+
+	device->bindSampler(0, m->sampler);
+	device->bindTexture(0, m->texture);
+
+	m->world->render(stateMachine->getTime(), *m->batcher);
 
 	if(m->joystickActive)
 	{
 		vec2 c = windowToView(stateMachine, m->joystickCenter);
 		vec2 p = windowToView(stateMachine, m->joystickPosition);
 
-		m->batcher.addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
-		m->batcher.addCircle(p, m->joystickStickRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
+		m->batcher->addCircle(c, m->joystickAreaRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
+		m->batcher->addCircle(p, m->joystickStickRadius, { 0.5f, 0.5f, 0.5f, 0.333f } );
 	}
 
-	m->batcher.flush();
+	m->batcher->flush(device);
 }
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)

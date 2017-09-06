@@ -30,6 +30,7 @@
 		0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FA0A2691EA2058A00D85832 /* File.cpp */; };
 		0FC0174C1EA39C85007C7EA7 /* DDSLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0174A1EA39C85007C7EA7 /* DDSLoader.cpp */; };
 		0FD090CD1ED99A24002D3F7B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */; };
+		0FEB8D581F604C9300CD7B96 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FEB8D561F604C9300CD7B96 /* Device.cpp */; };
 		0FF458D61EA141C0004FAC7E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0FF458D51EA141C0004FAC7E /* main.mm */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,8 @@
 		0FC0174A1EA39C85007C7EA7 /* DDSLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DDSLoader.cpp; path = ../common/DDSLoader.cpp; sourceTree = "<group>"; };
 		0FC0174B1EA39C85007C7EA7 /* DDSLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDSLoader.h; path = ../common/DDSLoader.h; sourceTree = "<group>"; };
 		0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		0FEB8D561F604C9300CD7B96 /* Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Device.cpp; path = ../common/Render/Device.cpp; sourceTree = "<group>"; };
+		0FEB8D571F604C9300CD7B96 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Device.h; path = ../common/Render/Device.h; sourceTree = "<group>"; };
 		0FF458D51EA141C0004FAC7E /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = main.mm; sourceTree = SOURCE_ROOT; usesTabs = 1; };
 		0FF458D81EA14278004FAC7E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -117,6 +120,7 @@
 		0F300D451EA146210059AA40 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0FEB8D551F604C8000CD7B96 /* Render */,
 				0F5E036E1F24D9CD00D9328D /* Profile.cpp */,
 				0F5E036F1F24D9CD00D9328D /* Profile.h */,
 				0F5E03701F24D9CD00D9328D /* Util.cpp */,
@@ -163,6 +167,15 @@
 				0F300D4A1EA14A640059AA40 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0FEB8D551F604C8000CD7B96 /* Render */ = {
+			isa = PBXGroup;
+			children = (
+				0FEB8D561F604C9300CD7B96 /* Device.cpp */,
+				0FEB8D571F604C9300CD7B96 /* Device.h */,
+			);
+			name = Render;
 			sourceTree = "<group>";
 		};
 		0FF458D71EA1423D004FAC7E /* ios */ = {
@@ -254,6 +267,7 @@
 				0F2222631EB7756B00394F35 /* World.cpp in Sources */,
 				0F5B32321EA1719300266FA6 /* GameState.cpp in Sources */,
 				0F5B322F1EA170E400266FA6 /* StateMachine.cpp in Sources */,
+				0FEB8D581F604C9300CD7B96 /* Device.cpp in Sources */,
 				0F5B322D1EA170E400266FA6 /* MenuState.cpp in Sources */,
 				0F5F37E01EAFAA0C0027A884 /* OpenGL.cpp in Sources */,
 				0F5E03731F24D9CD00D9328D /* Util.cpp in Sources */,
@@ -368,6 +382,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 7JW263HHSD;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/..";
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -381,6 +396,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 7JW263HHSD;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/..";
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

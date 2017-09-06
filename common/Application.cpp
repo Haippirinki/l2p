@@ -5,6 +5,8 @@
 #include "MenuState.h"
 #include "TestState.h"
 
+#include "Render/Device.h"
+
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
@@ -41,8 +43,11 @@ void Application::update(float width, float height)
 {
 	if(!m_initialized)
 	{
-		m_stateMachine.addState("game", new GameState);
-		m_stateMachine.addState("menu", new MenuState);
+		m_device = new Render::Device;
+		m_swapChain = m_device->createSwapChain();
+
+		m_stateMachine.addState("game", new GameState(m_device));
+		m_stateMachine.addState("menu", new MenuState(m_device));
 		m_stateMachine.addState("test", new TestState);
 		m_stateMachine.requestState("menu");
 
@@ -60,7 +65,14 @@ void Application::update(float width, float height)
 
 void Application::render(int width, int height)
 {
-	m_stateMachine.render(width, height);
+	GLint framebuffer;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer);
+
+	m_device->updateSwapChain(m_swapChain, framebuffer, width, height);
+
+	m_stateMachine.render(m_device, m_swapChain->getBackBuffer());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 }
 
 void Application::mouseDown(float x, float y)

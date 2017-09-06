@@ -2,6 +2,14 @@
 
 #include "StateMachine.h"
 
+#include <cstdint>
+
+namespace Render
+{
+	class Device;
+	class SwapChain;
+}
+
 class Application
 {
 public:
@@ -20,4 +28,6 @@ private:
 	StateMachine m_stateMachine;
 	int64_t m_startTime;
 	int64_t m_lastUpdateTime;
+	Render::Device* m_device;
+	Render::SwapChain* m_swapChain;
 };
