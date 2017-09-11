@@ -475,7 +475,7 @@ namespace Render
 	class Sampler
 	{
 	private:
-		Sampler(const SamplerDesc& samplerDesc);
+		Sampler(const SamplerDesc& samplerDesc, float maxAnisotropy);
 		~Sampler();
 
 		GLuint m_sampler;

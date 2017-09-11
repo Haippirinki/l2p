@@ -3,7 +3,9 @@
 #include <common/DDSLoader.h>
 #include <common/OpenGL.h>
 
+#include <algorithm>
 #include <cassert>
+#include <cstring>
 #include <vector>
 
 using namespace Render;
@@ -100,6 +102,8 @@ struct Device::PrivateData
 	const RasterizerState* currentRasterizerState;
 
 	float currentBlendColor[4];
+
+	float maxAnisotropy;
 };
 
 Device::Device() : m(new PrivateData)
@@ -129,6 +133,18 @@ Device::Device() : m(new PrivateData)
 	GLint maxVertexAttributes;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttributes);
 	assert(size_t(maxVertexAttributes) >= MaxVertexAttributes);
+
+	GLint numExtensions;
+	glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+
+	m->maxAnisotropy = 1.f;
+	for(int i = 0; i < numExtensions; i++)
+	{
+		if(strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_EXT_texture_filter_anisotropic") == 0)
+		{
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m->maxAnisotropy);
+		}
+	}
 }
 
 Device::~Device()
@@ -261,7 +277,7 @@ const Sampler* Device::createSampler(const SamplerDesc& samplerDesc)
 		}
 	}
 
-	Sampler* sampler = new Sampler(samplerDesc);
+	Sampler* sampler = new Sampler(samplerDesc, m->maxAnisotropy);
 	m->samplers.push_back(std::pair<SamplerDesc, Sampler*>(samplerDesc, sampler));
 	return sampler;
 }
@@ -816,7 +832,6 @@ UniformBuffer::UniformBuffer(size_t size, BufferUsage bufferUsage, const void* d
 	m_size = size;
 }
 
-
 VertexArray::~VertexArray()
 {
 	if(m_array)
@@ -864,14 +879,17 @@ Texture::Texture(GLuint texture, GLenum bindTarget, size_t width, size_t height,
 {
 }
 
-Sampler::Sampler(const SamplerDesc& samplerDesc)
+Sampler::Sampler(const SamplerDesc& samplerDesc, float maxAnisotropy)
 {
 	glGenSamplers(1, &m_sampler);
 
 	glSamplerParameteri(m_sampler, GL_TEXTURE_MIN_FILTER, GLint(samplerDesc.m_minFilter));
 	glSamplerParameteri(m_sampler, GL_TEXTURE_MAG_FILTER, GLint(samplerDesc.m_magFilter));
 
-	glSamplerParameterf(m_sampler, GL_TEXTURE_MAX_ANISOTROPY_EXT, samplerDesc.m_maxAnisotropy);
+	if(maxAnisotropy > 1.f && samplerDesc.m_maxAnisotropy > 1.f)
+	{
+		glSamplerParameterf(m_sampler, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(maxAnisotropy, samplerDesc.m_maxAnisotropy));
+	}
 
 	glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_S, GLint(samplerDesc.m_addressModeS));
 	glSamplerParameteri(m_sampler, GL_TEXTURE_WRAP_T, GLint(samplerDesc.m_addressModeT));
