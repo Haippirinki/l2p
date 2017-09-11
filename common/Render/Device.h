@@ -233,8 +233,8 @@ namespace Render
 		void clearRenderTargetColor(float r, float g, float b, float a);
 		void clearRenderTargetDepth(float depth = 1.f);
 
-		void resolveRenderTarget(RenderTarget* source, RenderTarget* target);
-		void blitRenderTarget(RenderTarget* source, RenderTarget* target, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1);
+		void resolveRenderTarget(const RenderTarget* source, const RenderTarget* target);
+		void blitRenderTarget(const RenderTarget* source, const RenderTarget* target, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1);
 
 		void draw(Topology topology, size_t vertexCount, size_t startVertex);
 		void drawIndexed(Topology topology, size_t indexCount, size_t startIndex);

@@ -503,12 +503,12 @@ void Device::clearRenderTargetDepth(float depth)
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void Device::resolveRenderTarget(RenderTarget* source, RenderTarget* target)
+void Device::resolveRenderTarget(const RenderTarget* source, const RenderTarget* target)
 {
 	blitRenderTarget(source, target, 0, 0, GLint(source->getWidth()), GLint(source->getHeight()), 0, 0, GLint(target->getWidth()), GLint(target->getHeight()));
 }
 
-void Device::blitRenderTarget(RenderTarget* source, RenderTarget* target, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1)
+void Device::blitRenderTarget(const RenderTarget* source, const RenderTarget* target, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1)
 {
 	GLint previousFramebuffer;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFramebuffer);
