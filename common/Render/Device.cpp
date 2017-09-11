@@ -4,6 +4,7 @@
 #include <common/OpenGL.h>
 
 #include <cassert>
+#include <vector>
 
 using namespace Render;
 
@@ -36,7 +37,10 @@ static GLenum getFormat(TextureFormat textureFormat)
 {
 	switch(textureFormat)
 	{
+	default:
 	case TextureFormat::None:
+		return 0;
+
 	case TextureFormat::R8:
 		return GL_RED;
 
@@ -55,10 +59,33 @@ static GLenum getFormat(TextureFormat textureFormat)
 	case TextureFormat::D32f:
 		return GL_DEPTH_COMPONENT;
 	}
-	return 0;
 }
 
-#include <vector>
+static GLenum getType(TextureFormat textureFormat)
+{
+	switch(textureFormat)
+	{
+	default:
+	case TextureFormat::None:
+		return 0;
+
+	case TextureFormat::R8:
+	case TextureFormat::RG8:
+	case TextureFormat::RGB8:
+	case TextureFormat::RGBA8:
+	case TextureFormat::sRGB8A8:
+		return GL_UNSIGNED_BYTE;
+
+	case TextureFormat::D16:
+		return GL_UNSIGNED_SHORT;
+
+	case TextureFormat::D24:
+		return GL_UNSIGNED_INT;
+
+	case TextureFormat::D32f:
+		return GL_FLOAT;
+	}
+}
 
 struct Device::PrivateData
 {
@@ -822,7 +849,7 @@ Texture::Texture(size_t width, size_t height, TextureFormat textureFormat, const
 	glGenTextures(1, &m_texture);
 	glBindTexture(m_bindTarget, m_texture);
 
-	glTexImage2D(m_bindTarget, 0, GLenum(textureFormat), GLsizei(width), GLsizei(height), 0, getFormat(textureFormat), GL_UNSIGNED_BYTE, data);
+	glTexImage2D(m_bindTarget, 0, GLenum(textureFormat), GLsizei(width), GLsizei(height), 0, getFormat(textureFormat), getType(textureFormat), data);
 	glTexParameteri(m_bindTarget, GL_TEXTURE_MAX_LEVEL, 0);
 
 	glBindTexture(m_bindTarget, previousTexture);

@@ -56,7 +56,7 @@ namespace Render
 		RG8 = 0x822b,
 		RGB8 = 0x8051,
 		RGBA8 = 0x8058,
-		sRGB8A8 = 0x8Cc3,
+		sRGB8A8 = 0x8c43,
 		D16 = 0x81a5,
 		D24 = 0x81a6,
 		D32f = 0x8Cac
