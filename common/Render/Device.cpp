@@ -103,6 +103,7 @@ struct Device::PrivateData
 
 	float currentBlendColor[4];
 
+	size_t maxSamples;
 	float maxAnisotropy;
 };
 
@@ -134,6 +135,11 @@ Device::Device() : m(new PrivateData)
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttributes);
 	assert(size_t(maxVertexAttributes) >= MaxVertexAttributes);
 
+	GLint maxSamples;
+	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+	assert(maxSamples >= 4);
+	m->maxSamples = size_t(maxSamples);
+
 	GLint numExtensions;
 	glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
 
@@ -164,7 +170,7 @@ RenderTarget* Device::createRenderTarget(Texture* colorTexture, Texture* depthTe
 
 RenderTarget* Device::createRenderTarget(size_t width, size_t height, TextureFormat colorFormat, TextureFormat depthFormat, size_t samples)
 {
-	return new RenderTarget(width, height, colorFormat, depthFormat, samples);
+	return new RenderTarget(width, height, colorFormat, depthFormat, (samples > m->maxSamples) ? m->maxSamples : samples);
 }
 
 VertexShader* Device::createVertexShader(const void* data, size_t size)
@@ -542,6 +548,16 @@ void Device::updateSwapChain(SwapChain* swapChain, GLuint framebuffer, size_t wi
 	swapChain->m_backBuffer.m_width = width;
 	swapChain->m_backBuffer.m_height = height;
 	swapChain->m_backBuffer.m_samples = 1;
+}
+
+size_t Device::getMaxSamples() const
+{
+	return m->maxSamples;
+}
+
+float Device::getMaxAnisotropy() const
+{
+	return m->maxAnisotropy;
 }
 
 RenderTarget::~RenderTarget()

@@ -242,6 +242,9 @@ namespace Render
 		SwapChain* createSwapChain();
 		void updateSwapChain(SwapChain* swapChain, GLuint framebuffer, size_t width, size_t height);
 
+		size_t getMaxSamples() const;
+		float getMaxAnisotropy() const;
+
 		static const size_t MaxTextureUnits = 16;
 		static const size_t MaxUniformBufferBindings = 16;
 		static const size_t MaxVertexAttributes = 16;
