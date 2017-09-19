@@ -3,6 +3,7 @@
 #include "DDSLoader.h"
 #include "File.h"
 #include "Math.h"
+#include "PostProcess.h"
 #include "Profile.h"
 #include "StateMachine.h"
 #include "World.h"
@@ -55,6 +56,8 @@ struct GameState::PrivateData
 	World* world;
 
 	double exitTime;
+
+	PostProcess* postProcess;
 };
 
 GameState::GameState(Render::Device* device) : m(new PrivateData)
@@ -102,10 +105,13 @@ GameState::GameState(Render::Device* device) : m(new PrivateData)
 	m->joystickMaxOffset = 0.1f;
 
 	m->world = nullptr;
+
+	m->postProcess = new PostProcess(device);
 }
 
 GameState::~GameState()
 {
+	delete m->postProcess;
 	delete m->batcher;
 	delete m->texture;
 	delete m->shaderProgram;
@@ -168,7 +174,8 @@ void GameState::update(StateMachine* stateMachine)
 
 void GameState::render(StateMachine* stateMachine, Render::Device* device, const Render::RenderTarget* renderTarget)
 {
-	device->setViewport(0, 0, renderTarget->getWidth(), renderTarget->getHeight());
+	m->postProcess->begin(device, renderTarget);
+
 	switch(m->world->getState())
 	{
 	case World::Playing:
@@ -238,6 +245,8 @@ void GameState::render(StateMachine* stateMachine, Render::Device* device, const
 	}
 
 	m->batcher->flush(device);
+
+	m->postProcess->end(device, renderTarget);
 }
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
