@@ -28,6 +28,7 @@
 		0F9B558E1EA68482003E40CC /* Math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B558C1EA68482003E40CC /* Math.cpp */; };
 		0F9B55911EA6848D003E40CC /* TestState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B558F1EA6848D003E40CC /* TestState.cpp */; };
 		0FA0A26B1EA2058A00D85832 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FA0A2691EA2058A00D85832 /* File.cpp */; };
+		0FA0C72D1F8655D500B2C19F /* PostProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FA0C72C1F8655D500B2C19F /* PostProcess.cpp */; };
 		0FC0174C1EA39C85007C7EA7 /* DDSLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0174A1EA39C85007C7EA7 /* DDSLoader.cpp */; };
 		0FD090CD1ED99A24002D3F7B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */; };
 		0FEB8D581F604C9300CD7B96 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FEB8D561F604C9300CD7B96 /* Device.cpp */; };
@@ -73,6 +74,8 @@
 		0F9B55901EA6848D003E40CC /* TestState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestState.h; path = ../common/TestState.h; sourceTree = "<group>"; };
 		0FA0A2691EA2058A00D85832 /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = File.cpp; path = ../common/File.cpp; sourceTree = "<group>"; };
 		0FA0A26A1EA2058A00D85832 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = File.h; path = ../common/File.h; sourceTree = "<group>"; };
+		0FA0C72B1F8655D500B2C19F /* PostProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostProcess.h; path = ../common/PostProcess.h; sourceTree = "<group>"; };
+		0FA0C72C1F8655D500B2C19F /* PostProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PostProcess.cpp; path = ../common/PostProcess.cpp; sourceTree = "<group>"; };
 		0FC0174A1EA39C85007C7EA7 /* DDSLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DDSLoader.cpp; path = ../common/DDSLoader.cpp; sourceTree = "<group>"; };
 		0FC0174B1EA39C85007C7EA7 /* DDSLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDSLoader.h; path = ../common/DDSLoader.h; sourceTree = "<group>"; };
 		0FD090CC1ED99A24002D3F7B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 		0F300D451EA146210059AA40 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0FA0C72C1F8655D500B2C19F /* PostProcess.cpp */,
+				0FA0C72B1F8655D500B2C19F /* PostProcess.h */,
 				0FEB8D551F604C8000CD7B96 /* Render */,
 				0F5E036E1F24D9CD00D9328D /* Profile.cpp */,
 				0F5E036F1F24D9CD00D9328D /* Profile.h */,
@@ -269,6 +274,7 @@
 				0F5B322F1EA170E400266FA6 /* StateMachine.cpp in Sources */,
 				0FEB8D581F604C9300CD7B96 /* Device.cpp in Sources */,
 				0F5B322D1EA170E400266FA6 /* MenuState.cpp in Sources */,
+				0FA0C72D1F8655D500B2C19F /* PostProcess.cpp in Sources */,
 				0F5F37E01EAFAA0C0027A884 /* OpenGL.cpp in Sources */,
 				0F5E03731F24D9CD00D9328D /* Util.cpp in Sources */,
 				0FF458D61EA141C0004FAC7E /* main.mm in Sources */,
