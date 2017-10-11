@@ -28,7 +28,7 @@ static vec2 viewToWindow(StateMachine* stateMachine, const vec2& p)
 
 struct Uniforms
 {
-	float mvp[16];
+	mat4 mvp;
 };
 
 struct GameState::PrivateData
@@ -191,35 +191,20 @@ void GameState::render(StateMachine* stateMachine, Render::Device* device, const
 		break;
 	}
 
-	float sx, sy;
+	float hw, hh;
 	if(renderTarget->getWidth() > renderTarget->getHeight())
 	{
-		sx = float(renderTarget->getHeight()) / float(renderTarget->getWidth());
-		sy = 1.f;
+		hw = float(renderTarget->getWidth()) / float(renderTarget->getHeight());
+		hh = 1.f;
 	}
 	else
 	{
-		sx = 1.f;
-		sy = float(renderTarget->getWidth()) / float(renderTarget->getHeight());
+		hw = 1.f;
+		hh = float(renderTarget->getHeight()) / float(renderTarget->getWidth());
 	}
 
 	Uniforms* uniforms = (Uniforms*)device->mapUniformBuffer(m->uniformBuffer, Render::BufferAccess::WriteInvalidateBuffer);
-	uniforms->mvp[0] = sx;
-	uniforms->mvp[1] = 0.f;
-	uniforms->mvp[2] = 0.f;
-	uniforms->mvp[3] = 0.f,
-	uniforms->mvp[4] = 0.f;
-	uniforms->mvp[5] = sy;
-	uniforms->mvp[6] = 0.f;
-	uniforms->mvp[7] = 0.f;
-	uniforms->mvp[8] = 0.f;
-	uniforms->mvp[9] = 0.f;
-	uniforms->mvp[10] = 1.f;
-	uniforms->mvp[11] = 0.f;
-	uniforms->mvp[12] = 0.f;
-	uniforms->mvp[13] = 0.f;
-	uniforms->mvp[14] = 0.f;
-	uniforms->mvp[15] = 1.f;
+	uniforms->mvp = orthographicProjectionMatrix(-hw, hw, -hh, hh, -1.f, 1.f);
 	device->unmapUniformBuffer(m->uniformBuffer);
 
 	device->bindUniformBuffer(0, m->uniformBuffer);

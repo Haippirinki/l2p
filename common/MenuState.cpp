@@ -1,5 +1,6 @@
 ﻿#include "MenuState.h"
 #include "File.h"
+#include "Math.h"
 #include "Profile.h"
 #include "StateMachine.h"
 #include "TextRenderer.h"
@@ -9,7 +10,7 @@
 
 struct Uniforms
 {
-	float mvp[16];
+	mat4 mvp;
 };
 
 struct MenuState::PrivateData
@@ -86,24 +87,8 @@ void MenuState::render(StateMachine* stateMachine, Render::Device* device, const
 	device->setViewport(0, 0, renderTarget->getWidth(), renderTarget->getHeight());
 	device->clearRenderTargetColor(0.5f, 0.5f, 0.5f, 1.f);
 
-	const float s = float(renderTarget->getWidth()) / SCREEN_WIDTH;
 	Uniforms* uniforms = (Uniforms*)device->mapUniformBuffer(m->uniformBuffer, Render::BufferAccess::WriteInvalidateBuffer);
-	uniforms->mvp[0] = 2.f * s / float(renderTarget->getWidth());
-	uniforms->mvp[1] = 0.f;
-	uniforms->mvp[2] = 0.f;
-	uniforms->mvp[3] = 0.f,
-	uniforms->mvp[4] = 0.f;
-	uniforms->mvp[5] = -2.f * s / float(renderTarget->getHeight());
-	uniforms->mvp[6] = 0.f;
-	uniforms->mvp[7] = 0.f;
-	uniforms->mvp[8] = 0.f;
-	uniforms->mvp[9] = 0.f;
-	uniforms->mvp[10] = 1.f;
-	uniforms->mvp[11] = 0.f;
-	uniforms->mvp[12] = -1.f;
-	uniforms->mvp[13] = 1.f;
-	uniforms->mvp[14] = 0.f;
-	uniforms->mvp[15] = 1.f;
+	uniforms->mvp = orthographicProjectionMatrix(0.f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.f, -1.f, 1.f);
 	device->unmapUniformBuffer(m->uniformBuffer);
 
 	device->bindUniformBuffer(0, m->uniformBuffer);
