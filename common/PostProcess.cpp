@@ -73,12 +73,12 @@ PostProcess::PostProcess(Render::Device* device) : m(new PrivateData)
 
 	Vertex vertices[6] = 
 	{
-		{ -1.f, -1.f },
-		{ 1.f, -1.f },
-		{ -1.f, 1.f },
-		{ -1.f, 1.f },
-		{ 1.f, -1.f },
-		{ 1.f, 1.f }
+		{ { -1.f, -1.f } },
+		{ { 1.f, -1.f } },
+		{ { -1.f, 1.f } },
+		{ { -1.f, 1.f } },
+		{ { 1.f, -1.f } },
+		{ { 1.f, 1.f } }
 	};
 	m->vertexBuffer = device->createVertexBuffer(6 * sizeof(Vertex), Render::BufferUsage::Static, vertexFormat, vertices);
 
@@ -111,7 +111,7 @@ void PostProcess::begin(Render::Device* device, const Render::RenderTarget* rend
 		m->depthTexture = device->createTexture(renderTarget->getWidth(), renderTarget->getHeight(), Render::TextureFormat::D32f, nullptr);
 		m->renderTarget = device->createRenderTarget(m->colorTexture, m->depthTexture);
 
-		Uniforms uniforms = { 1.f / m->multisampleRenderTarget->getWidth(), 1.f / m->multisampleRenderTarget->getHeight() };
+		Uniforms uniforms = { { 1.f / m->multisampleRenderTarget->getWidth(), 1.f / m->multisampleRenderTarget->getHeight() } };
 		m->uniformBuffer = device->createUniformBuffer(sizeof(Uniforms), Render::BufferUsage::Static, &uniforms);
 	}
 

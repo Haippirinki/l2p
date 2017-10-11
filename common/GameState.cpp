@@ -139,7 +139,7 @@ void GameState::leave(StateMachine* stateMachine)
 
 void GameState::update(StateMachine* stateMachine)
 {
-	if(!m->exitTime)
+	if(m->exitTime == 0.0)
 	{
 		if(m->joystickActive)
 		{
@@ -251,7 +251,7 @@ void GameState::render(StateMachine* stateMachine, Render::Device* device, const
 
 void GameState::mouseDown(StateMachine* stateMachine, float x, float y)
 {
-	if(m->exitTime && m->exitTime <= stateMachine->getTime())
+	if(m->exitTime != 0.0 && m->exitTime <= stateMachine->getTime())
 	{
 		stateMachine->requestState("menu");
 	}
