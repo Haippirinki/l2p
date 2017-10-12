@@ -52,6 +52,7 @@ struct World::PrivateData
 	double enemyUsedPortalTime;
 	float playerRadius;
 	float time;
+	bool portalOpen;
 
 	std::list<std::pair<float, Enemy>> pendingEnemies;
 	std::list<Enemy> enemies;
@@ -68,6 +69,7 @@ World::World() : m(new PrivateData)
 	m->playerRadius = 0.05f;
 	m->enemyUsedPortalTime = -EFFECT_DURATION;
 	m->time = 0.f;
+	m->portalOpen = false;
 }
 
 World::~World()
@@ -193,6 +195,7 @@ void World::render(double t, Batcher& batcher) const
 	if(m->pendingEnemies.empty() && m->enemies.empty())
 	{
 		batcher.addCircle(vec2::zero, 0.05f, { 0.f, 0.f, 0.f, 1.f });
+		m->portalOpen = true;
 	}
 	else
 	{
@@ -210,6 +213,11 @@ void World::render(double t, Batcher& batcher) const
 void World::setControl(const vec2& control)
 {
 	m->playerControl = control;
+}
+
+bool World::isPortalOpen() const
+{
+	return m->portalOpen;
 }
 
 World::State World::getState() const

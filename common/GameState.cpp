@@ -156,7 +156,10 @@ void GameState::update(StateMachine* stateMachine)
 			m->world->setControl(vec2::zero);
 		}
 
-		m->world->update(stateMachine->getTime(), (float)stateMachine->getDeltaTime());
+		if(m->joystickActive)
+		{
+			m->world->update(stateMachine->getTime(), (float)stateMachine->getDeltaTime());
+		}
 
 		if(m->world->getState() == World::Lost)
 		{
@@ -235,18 +238,37 @@ void GameState::render(StateMachine* stateMachine, Render::Device* device, const
 	}
 
 	m->batcher->flush(device);
-
 	const float SCREEN_WIDTH = 1920.f;
 	const float SCREEN_HEIGHT = 1920.f * (float)renderTarget->getHeight() / (float)renderTarget->getWidth();
 
 	uniforms = (Uniforms*)device->mapUniformBuffer(m->uniformBuffer, Render::BufferAccess::WriteInvalidateBuffer);
 	uniforms->mvp = orthographicProjectionMatrix(0.f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.f, -1.f, 1.f);
 	device->unmapUniformBuffer(m->uniformBuffer);
-
 	float minX, maxX, minY, maxY;
-	m->textRenderer->getTextSize("l2p", 0.f, 0.f, minX, maxX, minY, maxY);
-	m->textRenderer->addText("l2p", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
 
+	if(!m->joystickActive && m->world->getState() == World::Playing && !m->world->isPortalOpen())
+	{
+		m->textRenderer->getTextSize("Touch screen to continue", 0.f, 0.f, minX, maxX, minY, maxY);
+		m->textRenderer->addText("Touch screen to continue", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
+	}
+
+	if(m->world->getState() == World::Won)
+	{
+		m->textRenderer->getTextSize("Great!", 0.f, 0.f, minX, maxX, minY, maxY);
+		m->textRenderer->addText("Great!", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
+	}
+
+	if(m->world->getState() == World::Lost)
+	{
+		m->textRenderer->getTextSize("Ouch! Click to try again.", 0.f, 0.f, minX, maxX, minY, maxY);
+		m->textRenderer->addText("Ouch! Click to try again.", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
+	}
+
+	if(m->world->isPortalOpen() && m->world->getState() == World::Playing)
+	{
+		m->textRenderer->getTextSize("Portal is open!", 0.f, 0.f, minX, maxX, minY, maxY);
+		m->textRenderer->addText("Portal is open!", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
+	 }
 	m->textRenderer->flush(device);
 
 	m->postProcess->end(device, renderTarget);
