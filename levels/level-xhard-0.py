@@ -1,5 +1,6 @@
 import gen
 
+print "Patience is a virtue"
 gen.arc(0, 100, 2, 7, 0, 720, 1)
 gen.arc(5, 100, 2, 7, 720, 0, 1)
 
