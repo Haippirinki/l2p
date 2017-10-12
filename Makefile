@@ -1,3 +1,5 @@
+.PHONY: all
+
 SOURCES = $(wildcard common/*.cpp) $(wildcard common/*/*.cpp)
 LEVEL_SOURCES = $(wildcard levels/level-*.py)
 
