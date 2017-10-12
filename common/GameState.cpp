@@ -6,6 +6,7 @@
 #include "PostProcess.h"
 #include "Profile.h"
 #include "StateMachine.h"
+#include "TextRenderer.h"
 #include "World.h"
 
 #include "Render/Device.h"
@@ -57,6 +58,8 @@ struct GameState::PrivateData
 
 	double exitTime;
 
+	TextRenderer* textRenderer;
+
 	PostProcess* postProcess;
 };
 
@@ -105,6 +108,8 @@ GameState::GameState(Render::Device* device) : m(new PrivateData)
 	m->joystickMaxOffset = 0.1f;
 
 	m->world = nullptr;
+
+	m->textRenderer = new TextRenderer(device, "opensans_semibold_100px_3px_outline");
 
 	m->postProcess = new PostProcess(device);
 }
@@ -230,6 +235,19 @@ void GameState::render(StateMachine* stateMachine, Render::Device* device, const
 	}
 
 	m->batcher->flush(device);
+
+	const float SCREEN_WIDTH = 1920.f;
+	const float SCREEN_HEIGHT = 1920.f * (float)renderTarget->getHeight() / (float)renderTarget->getWidth();
+
+	uniforms = (Uniforms*)device->mapUniformBuffer(m->uniformBuffer, Render::BufferAccess::WriteInvalidateBuffer);
+	uniforms->mvp = orthographicProjectionMatrix(0.f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.f, -1.f, 1.f);
+	device->unmapUniformBuffer(m->uniformBuffer);
+
+	float minX, maxX, minY, maxY;
+	m->textRenderer->getTextSize("l2p", 0.f, 0.f, minX, maxX, minY, maxY);
+	m->textRenderer->addText("l2p", (SCREEN_WIDTH - (maxX - minX)) * 0.5f, SCREEN_HEIGHT * 0.5f - 2.f * m->textRenderer->getLineHeight());
+
+	m->textRenderer->flush(device);
 
 	m->postProcess->end(device, renderTarget);
 }
