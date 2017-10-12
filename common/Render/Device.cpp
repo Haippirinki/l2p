@@ -96,12 +96,15 @@ struct Device::PrivateData
 	std::vector<std::pair<DepthStencilDesc, DepthStencilState*>> depthStencilStates;
 	std::vector<std::pair<RasterizerDesc, RasterizerState*>> rasterizerStates;
 
+	const RenderTarget* currentRenderTarget;
+	const ShaderProgram* currentShaderProgram;
+	const UniformBuffer* currentUniformBuffer[MaxUniformBufferBindings];
+	const Texture* currentTexture[MaxTextureUnits];
 	const Sampler* currentSampler[MaxTextureUnits];
+	const VertexArray* currentVertexArray;
 	const BlendState* currentBlendState;
 	const DepthStencilState* currentDepthStencilState;
 	const RasterizerState* currentRasterizerState;
-
-	float currentBlendColor[4];
 
 	size_t maxSamples;
 	float maxAnisotropy;
@@ -109,19 +112,7 @@ struct Device::PrivateData
 
 Device::Device() : m(new PrivateData)
 {
-	for(size_t i = 0; i < MaxTextureUnits; ++i)
-	{
-		m->currentSampler[i] = nullptr;
-	}
-
-	m->currentBlendState = nullptr;
-	m->currentDepthStencilState = nullptr;
-	m->currentRasterizerState = nullptr;
-
-	m->currentBlendColor[0] = 0.f;
-	m->currentBlendColor[1] = 0.f;
-	m->currentBlendColor[2] = 0.f;
-	m->currentBlendColor[3] = 0.f;
+	reset();
 
 	GLint maxTextureUnits;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
@@ -144,7 +135,7 @@ Device::Device() : m(new PrivateData)
 	glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
 
 	m->maxAnisotropy = 1.f;
-	for(int i = 0; i < numExtensions; i++)
+	for(int i = 0; i < numExtensions; ++i)
 	{
 		if(strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_EXT_texture_filter_anisotropic") == 0)
 		{
@@ -156,6 +147,28 @@ Device::Device() : m(new PrivateData)
 Device::~Device()
 {
 	delete m;
+}
+
+void Device::reset()
+{
+	m->currentRenderTarget = nullptr;
+	m->currentShaderProgram = nullptr;
+
+	for(size_t i = 0; i < MaxUniformBufferBindings; ++i)
+	{
+		m->currentUniformBuffer[i] = nullptr;
+	}
+
+	for(size_t i = 0; i < MaxTextureUnits; ++i)
+	{
+		m->currentTexture[i] = nullptr;
+		m->currentSampler[i] = nullptr;
+	}
+
+	m->currentVertexArray = nullptr;
+	m->currentBlendState = nullptr;
+	m->currentDepthStencilState = nullptr;
+	m->currentRasterizerState = nullptr;
 }
 
 RenderTarget* Device::createRenderTarget(Texture* colorTexture, Texture* depthTexture)
@@ -335,30 +348,67 @@ const RasterizerState* Device::createRasterizerState(const RasterizerDesc& raste
 
 void Device::bindRenderTarget(const RenderTarget* renderTarget)
 {
+	assert(renderTarget);
+
+	if(renderTarget == m->currentRenderTarget)
+	{
+		return;
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->m_framebuffer);
+
+	m->currentRenderTarget = renderTarget;
 }
 
 void Device::bindShaderProgram(const ShaderProgram* shaderProgram)
 {
+	assert(shaderProgram);
+
+	if(shaderProgram == m->currentShaderProgram)
+	{
+		return;
+	}
+
 	glUseProgram(shaderProgram->m_program);
+
+	m->currentShaderProgram = shaderProgram;
 }
 
 void Device::bindUniformBuffer(unsigned int index, const UniformBuffer* uniformBuffer)
 {
+	assert(index < MaxUniformBufferBindings);
+	assert(uniformBuffer);
+
+	if(uniformBuffer == m->currentUniformBuffer[index])
+	{
+		return;
+	}
+
 	glBindBufferBase(GL_UNIFORM_BUFFER, index, uniformBuffer->m_buffer);
+
+	m->currentUniformBuffer[index] = uniformBuffer;
 }
 
 void Device::bindTexture(unsigned int unit, const Texture* texture)
 {
 	assert(unit < MaxTextureUnits);
+	assert(texture);
+
+	if(texture == m->currentTexture[unit])
+	{
+		return;
+	}
 
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(texture->m_bindTarget, texture->m_texture);
+
+	m->currentTexture[unit] = texture;
 }
 
 void Device::bindSampler(unsigned int unit, const Sampler* sampler)
 {
 	assert(unit < MaxTextureUnits);
+	assert(sampler);
 
 	if(sampler == m->currentSampler[unit])
 	{
@@ -372,6 +422,13 @@ void Device::bindSampler(unsigned int unit, const Sampler* sampler)
 
 void Device::bindVertexArray(const VertexArray* vertexArray)
 {
+	assert(vertexArray);
+
+	if(vertexArray == m->currentVertexArray)
+	{
+		return;
+	}
+
 	if(vertexArray->m_array)
 	{
 		glBindVertexArray(vertexArray->m_array);
@@ -409,10 +466,14 @@ void Device::bindVertexArray(const VertexArray* vertexArray)
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexArray->m_indexBuffer->m_buffer);
 		}
 	}
+
+	m->currentVertexArray = vertexArray;
 }
 
 void Device::bindBlendState(const BlendState* blendState)
 {
+	assert(blendState);
+
 	if(blendState == m->currentBlendState)
 	{
 		return;
@@ -434,6 +495,8 @@ void Device::bindBlendState(const BlendState* blendState)
 
 void Device::bindDepthStencilState(const DepthStencilState* depthStencilState)
 {
+	assert(depthStencilState);
+
 	if(depthStencilState == m->currentDepthStencilState)
 	{
 		return;
@@ -455,6 +518,8 @@ void Device::bindDepthStencilState(const DepthStencilState* depthStencilState)
 
 void Device::bindRasterizerState(const RasterizerState* rasterizerState)
 {
+	assert(rasterizerState);
+
 	if(rasterizerState == m->currentRasterizerState)
 	{
 		return;
@@ -475,17 +540,7 @@ void Device::bindRasterizerState(const RasterizerState* rasterizerState)
 
 void Device::setBlendColor(float r, float g, float b, float a)
 {
-	if(r == m->currentBlendColor[0] && g == m->currentBlendColor[1] && b == m->currentBlendColor[2] && a == m->currentBlendColor[3])
-	{
-		return;
-	}
-
 	glBlendColor(r, g, b, a);
-
-	m->currentBlendColor[0] = r;
-	m->currentBlendColor[1] = g;
-	m->currentBlendColor[2] = b;
-	m->currentBlendColor[3] = a;
 }
 
 void Device::setViewport(int x, int y, size_t width, size_t height)
@@ -495,18 +550,29 @@ void Device::setViewport(int x, int y, size_t width, size_t height)
 
 void Device::clearRenderTargetColor(float r, float g, float b, float a)
 {
+	assert(m->currentRenderTarget);
+
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Device::clearRenderTargetDepth(float depth)
 {
+	assert(m->currentRenderTarget);
+
+	GLboolean previousMask;
+	glGetBooleanv(GL_DEPTH_WRITEMASK, &previousMask);
+
+	glDepthMask(GL_FALSE);
+
 #ifdef GL_ES_VERSION_3_0
 	glClearDepthf(depth);
 #else
 	glClearDepth(depth);
 #endif
 	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glDepthMask(previousMask);
 }
 
 void Device::resolveRenderTarget(const RenderTarget* source, const RenderTarget* target)
@@ -529,11 +595,42 @@ void Device::blitRenderTarget(const RenderTarget* source, const RenderTarget* ta
 
 void Device::draw(Topology topology, size_t vertexCount, size_t startVertex)
 {
+	assert(m->currentRenderTarget);
+	assert(m->currentShaderProgram);
+	for(int i = 0; i < MaxUniformBufferBindings; ++i)
+	{
+		assert(!m->currentShaderProgram->m_uniformBufferBindingSet[i] || m->currentUniformBuffer[i]);
+	}
+	for(int i = 0; i < MaxTextureUnits; ++i)
+	{
+		assert(!m->currentShaderProgram->m_samplerBindingSet[i] || (m->currentTexture[i] && m->currentSampler[i]));
+	}
+	assert(m->currentVertexArray);
+	assert(m->currentBlendState);
+	assert(m->currentDepthStencilState);
+	assert(m->currentRasterizerState);
+
 	glDrawArrays(GLenum(topology), GLsizei(startVertex), GLsizei(vertexCount));
 }
 
 void Device::drawIndexed(Topology topology, size_t indexCount, size_t startIndex)
 {
+	assert(m->currentRenderTarget);
+	assert(m->currentShaderProgram);
+	for(int i = 0; i < MaxUniformBufferBindings; ++i)
+	{
+		assert(!m->currentShaderProgram->m_uniformBufferBindingSet[i] || m->currentUniformBuffer[i]);
+	}
+	for(int i = 0; i < MaxTextureUnits; ++i)
+	{
+		assert(!m->currentShaderProgram->m_samplerBindingSet[i] || (m->currentTexture[i] && m->currentSampler[i]));
+	}
+	assert(m->currentVertexArray);
+	assert(m->currentVertexArray->m_indexBuffer);
+	assert(m->currentBlendState);
+	assert(m->currentDepthStencilState);
+	assert(m->currentRasterizerState);
+
 	glDrawElements(GLenum(topology), GLsizei(indexCount), GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * startIndex));
 }
 
@@ -548,6 +645,8 @@ void Device::updateSwapChain(SwapChain* swapChain, GLuint framebuffer, size_t wi
 	swapChain->m_backBuffer.m_width = width;
 	swapChain->m_backBuffer.m_height = height;
 	swapChain->m_backBuffer.m_samples = 1;
+
+	m->currentRenderTarget = &swapChain->m_backBuffer;
 }
 
 size_t Device::getMaxSamples() const
@@ -716,15 +815,21 @@ ShaderProgram::~ShaderProgram()
 
 void ShaderProgram::setUniformBufferBinding(const char* name, unsigned int binding)
 {
+	assert(binding < Device::MaxUniformBufferBindings);
+
 	GLuint blockIndex = glGetUniformBlockIndex(m_program, name);
 	if(blockIndex != GL_INVALID_INDEX)
 	{
 		glUniformBlockBinding(m_program, blockIndex, binding);
 	}
+
+	m_uniformBufferBindingSet[binding] = true;
 }
 
 void ShaderProgram::setSamplerBinding(const char* name, unsigned int binding)
 {
+	assert(binding < Device::MaxTextureUnits);
+
 	GLint location = glGetUniformLocation(m_program, name);
 	if(location != -1)
 	{
@@ -735,6 +840,21 @@ void ShaderProgram::setSamplerBinding(const char* name, unsigned int binding)
 		glUniform1i(location, binding);
 
 		glUseProgram(previousProgram);
+	}
+
+	m_samplerBindingSet[binding] = true;
+}
+
+ShaderProgram::ShaderProgram()
+{
+	for(int i = 0; i < Device::MaxUniformBufferBindings; ++i)
+	{
+		m_uniformBufferBindingSet[i] = false;
+	}
+
+	for(int i = 0; i < Device::MaxTextureUnits; ++i)
+	{
+		m_samplerBindingSet[i] = false;
 	}
 }
 

@@ -186,6 +186,8 @@ namespace Render
 		Device();
 		~Device();
 
+		void reset();
+
 		RenderTarget* createRenderTarget(Texture* colorTexture, Texture* depthTexture);
 		RenderTarget* createRenderTarget(size_t width, size_t height, TextureFormat colorFormat, TextureFormat depthFormat, size_t samples);
 
@@ -322,9 +324,13 @@ namespace Render
 		void setSamplerBinding(const char* name, unsigned int binding);
 
 	private:
+		ShaderProgram();
 		bool init(GLuint vertexShader, GLuint fragmentShader);
 
 		GLuint m_program;
+
+		bool m_uniformBufferBindingSet[Device::MaxUniformBufferBindings];
+		bool m_samplerBindingSet[Device::MaxTextureUnits];
 
 		friend class Device;
 	};
