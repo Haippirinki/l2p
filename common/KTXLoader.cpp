@@ -3,6 +3,7 @@
 #include "OpenGL.h"
 
 #include <cinttypes>
+#include <cstring>
 
 struct KTXHeader
 {
@@ -59,7 +60,7 @@ GLuint loadKTX(const void* data, size_t size, size_t& width, size_t& height, siz
 	}
 
 	GLenum binding, firstTarget, lastTarget;
-	if(header->pixelWidth == 0)
+	if(header->pixelWidth == 0 || header->pixelHeight == 0)
 	{
 		return 0;
 	}
@@ -74,7 +75,7 @@ GLuint loadKTX(const void* data, size_t size, size_t& width, size_t& height, siz
 		bindTarget = firstTarget = lastTarget = GL_TEXTURE_3D;
 
 	}
-	else if(header->pixelHeight > 0)
+	else
 	{
 		if(header->numberOfFaces == 1)
 		{
@@ -92,16 +93,6 @@ GLuint loadKTX(const void* data, size_t size, size_t& width, size_t& height, siz
 		{
 			return 0;
 		}
-	}
-	else
-	{
-		if(header->numberOfFaces != 1)
-		{
-			return 0;
-		}
-
-		binding = GL_TEXTURE_BINDING_1D;
-		bindTarget = firstTarget = lastTarget = GL_TEXTURE_1D;
 	}
 
 	GLuint texture = 0;
@@ -141,7 +132,7 @@ GLuint loadKTX(const void* data, size_t size, size_t& width, size_t& height, siz
 					glCompressedTexImage3D(target, (GLint)level, header->glInternalFormat, (GLsizei)levelWidth, (GLsizei)levelHeight, (GLsizei)levelDepth, 0, (GLsizei)faceSize, textureData);
 				}
 			}
-			else if(bindTarget == GL_TEXTURE_2D)
+			else
 			{
 				if(header->glType != 0)
 				{
@@ -150,17 +141,6 @@ GLuint loadKTX(const void* data, size_t size, size_t& width, size_t& height, siz
 				else
 				{
 					glCompressedTexImage2D(target, (GLint)level, header->glInternalFormat, (GLsizei)levelWidth, (GLsizei)levelHeight, 0, (GLsizei)faceSize, textureData);
-				}
-			}
-			else
-			{
-				if(header->glType != 0)
-				{
-					glTexImage1D(target, (GLint)level, header->glInternalFormat, (GLsizei)levelWidth, 0, header->glFormat, header->glType, textureData);
-				}
-				else
-				{
-					glCompressedTexImage1D(target, (GLint)level, header->glInternalFormat, (GLsizei)levelWidth, 0, (GLsizei)faceSize, textureData);
 				}
 			}
 
