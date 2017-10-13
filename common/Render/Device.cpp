@@ -597,11 +597,11 @@ void Device::draw(Topology topology, size_t vertexCount, size_t startVertex)
 {
 	assert(m->currentRenderTarget);
 	assert(m->currentShaderProgram);
-	for(int i = 0; i < MaxUniformBufferBindings; ++i)
+	for(size_t i = 0; i < MaxUniformBufferBindings; ++i)
 	{
 		assert(!m->currentShaderProgram->m_uniformBufferBindingSet[i] || m->currentUniformBuffer[i]);
 	}
-	for(int i = 0; i < MaxTextureUnits; ++i)
+	for(size_t i = 0; i < MaxTextureUnits; ++i)
 	{
 		assert(!m->currentShaderProgram->m_samplerBindingSet[i] || (m->currentTexture[i] && m->currentSampler[i]));
 	}
@@ -617,11 +617,11 @@ void Device::drawIndexed(Topology topology, size_t indexCount, size_t startIndex
 {
 	assert(m->currentRenderTarget);
 	assert(m->currentShaderProgram);
-	for(int i = 0; i < MaxUniformBufferBindings; ++i)
+	for(size_t i = 0; i < MaxUniformBufferBindings; ++i)
 	{
 		assert(!m->currentShaderProgram->m_uniformBufferBindingSet[i] || m->currentUniformBuffer[i]);
 	}
-	for(int i = 0; i < MaxTextureUnits; ++i)
+	for(size_t i = 0; i < MaxTextureUnits; ++i)
 	{
 		assert(!m->currentShaderProgram->m_samplerBindingSet[i] || (m->currentTexture[i] && m->currentSampler[i]));
 	}
@@ -847,12 +847,12 @@ void ShaderProgram::setSamplerBinding(const char* name, unsigned int binding)
 
 ShaderProgram::ShaderProgram()
 {
-	for(int i = 0; i < Device::MaxUniformBufferBindings; ++i)
+	for(size_t i = 0; i < Device::MaxUniformBufferBindings; ++i)
 	{
 		m_uniformBufferBindingSet[i] = false;
 	}
 
-	for(int i = 0; i < Device::MaxTextureUnits; ++i)
+	for(size_t i = 0; i < Device::MaxTextureUnits; ++i)
 	{
 		m_samplerBindingSet[i] = false;
 	}
