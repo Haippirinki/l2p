@@ -1,6 +1,7 @@
 #include "Device.h"
 
 #include <common/DDSLoader.h>
+#include <common/KTXLoader.h>
 #include <common/OpenGL.h>
 
 #include <algorithm>
@@ -278,7 +279,11 @@ Texture* Device::createTexture(const void* data, size_t size, bool sRGB)
 {
 	size_t width, height, depth;
 	GLenum bindTarget;
-	GLuint texture = loadDDS(data, size, sRGB, width, height, depth, bindTarget);
+	GLuint texture = loadKTX(data, size, width, height, depth, bindTarget);
+	if(!texture)
+	{
+		texture = loadDDS(data, size, sRGB, width, height, depth, bindTarget);
+	}
 	if(texture)
 	{
 		return new Texture(texture, bindTarget, width, height, depth);
