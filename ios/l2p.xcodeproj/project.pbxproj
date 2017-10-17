@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0F2222621EB7756B00394F35 /* Batcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F22225E1EB7756B00394F35 /* Batcher.cpp */; };
 		0F2222631EB7756B00394F35 /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F2222601EB7756B00394F35 /* World.cpp */; };
+		0F2A63C11F961ADD0053B2F0 /* KTXLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F2A63BF1F961ADC0053B2F0 /* KTXLoader.cpp */; };
 		0F300D481EA146400059AA40 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F300D461EA146400059AA40 /* Application.cpp */; };
 		0F300D4B1EA14A640059AA40 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4A1EA14A640059AA40 /* UIKit.framework */; };
 		0F300D4D1EA14A6A0059AA40 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F300D4C1EA14A6A0059AA40 /* GLKit.framework */; };
@@ -41,6 +42,8 @@
 		0F22225F1EB7756B00394F35 /* Batcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Batcher.h; path = ../common/Batcher.h; sourceTree = "<group>"; };
 		0F2222601EB7756B00394F35 /* World.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = World.cpp; path = ../common/World.cpp; sourceTree = "<group>"; };
 		0F2222611EB7756B00394F35 /* World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = World.h; path = ../common/World.h; sourceTree = "<group>"; };
+		0F2A63BF1F961ADC0053B2F0 /* KTXLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KTXLoader.cpp; path = ../common/KTXLoader.cpp; sourceTree = "<group>"; };
+		0F2A63C01F961ADC0053B2F0 /* KTXLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KTXLoader.h; path = ../common/KTXLoader.h; sourceTree = "<group>"; };
 		0F300D461EA146400059AA40 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Application.cpp; path = ../common/Application.cpp; sourceTree = "<group>"; usesTabs = 1; };
 		0F300D471EA146400059AA40 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = ../common/Application.h; sourceTree = "<group>"; usesTabs = 1; };
 		0F300D4A1EA14A640059AA40 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -123,6 +126,8 @@
 		0F300D451EA146210059AA40 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				0F2A63BF1F961ADC0053B2F0 /* KTXLoader.cpp */,
+				0F2A63C01F961ADC0053B2F0 /* KTXLoader.h */,
 				0FA0C72C1F8655D500B2C19F /* PostProcess.cpp */,
 				0FA0C72B1F8655D500B2C19F /* PostProcess.h */,
 				0FEB8D551F604C8000CD7B96 /* Render */,
@@ -268,6 +273,7 @@
 				0F9B558E1EA68482003E40CC /* Math.cpp in Sources */,
 				0FC0174C1EA39C85007C7EA7 /* DDSLoader.cpp in Sources */,
 				0F300D481EA146400059AA40 /* Application.cpp in Sources */,
+				0F2A63C11F961ADD0053B2F0 /* KTXLoader.cpp in Sources */,
 				0F5414221EBA56B5002B9C78 /* BitmapFont.cpp in Sources */,
 				0F2222631EB7756B00394F35 /* World.cpp in Sources */,
 				0F5B32321EA1719300266FA6 /* GameState.cpp in Sources */,
