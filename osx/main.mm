@@ -78,6 +78,7 @@ int main(int argc, char** argv)
 	NSRect contentRect = NSMakeRect(0, 0, 1280, 720);
 	int styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
 	NSWindow* window = [[NSWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
+	[window setColorSpace: [NSColorSpace sRGBColorSpace]];
 	[window makeKeyAndOrderFront:nil];
 
 	[NSApp activateIgnoringOtherApps:YES];
