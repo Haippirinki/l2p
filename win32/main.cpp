@@ -143,5 +143,12 @@ int main(int argc, char** argv)
 		}
 	}
 
+	delete g_application;
+
+	wglMakeCurrent(0, 0);
+	wglDeleteContext(hRC);
+
+	DestroyWindow(hWnd);
+
 	return 0;
 }

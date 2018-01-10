@@ -31,6 +31,11 @@ StateMachine::StateMachine() : m(new PrivateData)
 
 StateMachine::~StateMachine()
 {
+	for(std::map<std::string, State*>::const_iterator it = m->state.begin(); it != m->state.end(); ++it)
+	{
+		delete it->second;
+	}
+
 	delete m;
 }
 

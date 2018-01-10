@@ -28,7 +28,7 @@ static int64_t getMicroseconds()
 #endif
 }
 
-Application::Application() : m_initialized(false)
+Application::Application() : m_initialized(false), m_device(nullptr), m_swapChain(nullptr), m_stateMachine(nullptr)
 {
 #ifdef _WIN32
 	QueryPerformanceFrequency((LARGE_INTEGER*)&s_frequency);
@@ -37,6 +37,9 @@ Application::Application() : m_initialized(false)
 
 Application::~Application()
 {
+	delete m_stateMachine;
+	delete m_swapChain;
+	delete m_device;
 }
 
 void Application::update(float width, float height)
@@ -45,11 +48,12 @@ void Application::update(float width, float height)
 	{
 		m_device = new Render::Device;
 		m_swapChain = m_device->createSwapChain();
+		m_stateMachine = new StateMachine;
 
-		m_stateMachine.addState("game", new GameState(m_device));
-		m_stateMachine.addState("menu", new MenuState(m_device));
-		m_stateMachine.addState("test", new TestState);
-		m_stateMachine.requestState("menu");
+		m_stateMachine->addState("game", new GameState(m_device));
+		m_stateMachine->addState("menu", new MenuState(m_device));
+		m_stateMachine->addState("test", new TestState);
+		m_stateMachine->requestState("menu");
 
 		m_startTime = m_lastUpdateTime = getMicroseconds();
 
@@ -58,7 +62,7 @@ void Application::update(float width, float height)
 
 	int64_t time = getMicroseconds();
 
-	m_stateMachine.update(width, height, (time - m_startTime) * (1.0 / 1000000.0), (time - m_lastUpdateTime) * (1.0 / 1000000.0));
+	m_stateMachine->update(width, height, (time - m_startTime) * (1.0 / 1000000.0), (time - m_lastUpdateTime) * (1.0 / 1000000.0));
 
 	m_lastUpdateTime = time;
 }
@@ -70,22 +74,22 @@ void Application::render(int width, int height)
 
 	m_device->updateSwapChain(m_swapChain, framebuffer, width, height);
 
-	m_stateMachine.render(m_device, m_swapChain->getBackBuffer());
+	m_stateMachine->render(m_device, m_swapChain->getBackBuffer());
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 }
 
 void Application::mouseDown(float x, float y)
 {
-	m_stateMachine.mouseDown(x, y);
+	m_stateMachine->mouseDown(x, y);
 }
 
 void Application::mouseUp(float x, float y)
 {
-	m_stateMachine.mouseUp(x, y);
+	m_stateMachine->mouseUp(x, y);
 }
 
 void Application::mouseMove(float x, float y)
 {
-	m_stateMachine.mouseMove(x, y);
+	m_stateMachine->mouseMove(x, y);
 }

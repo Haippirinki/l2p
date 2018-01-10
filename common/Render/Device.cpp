@@ -147,6 +147,26 @@ Device::Device() : m(new PrivateData)
 
 Device::~Device()
 {
+	for(std::vector<std::pair<SamplerDesc, Sampler*>>::const_iterator it = m->samplers.begin(); it != m->samplers.end(); ++it)
+	{
+		delete it->second;
+	}
+
+	for(std::vector<std::pair<BlendDesc, BlendState*>>::const_iterator it = m->blendStates.begin(); it != m->blendStates.end(); ++it)
+	{
+		delete it->second;
+	}
+
+	for(std::vector<std::pair<DepthStencilDesc, DepthStencilState*>>::const_iterator it = m->depthStencilStates.begin(); it != m->depthStencilStates.end(); ++it)
+	{
+		delete it->second;
+	}
+
+	for(std::vector<std::pair<RasterizerDesc, RasterizerState*>>::const_iterator it = m->rasterizerStates.begin(); it != m->rasterizerStates.end(); ++it)
+	{
+		delete it->second;
+	}
+
 	delete m;
 }
 
