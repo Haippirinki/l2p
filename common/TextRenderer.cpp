@@ -75,8 +75,8 @@ void TextRenderer::addText(const char* text, float x, float y)
 			vec2 xy0 = { float(cursor.x + c->xoffset), float(cursor.y + c->yoffset) };
 			vec2 xy1 = { float(cursor.x + c->xoffset + c->width), float(cursor.y + c->yoffset + c->height) };
 
-			vec2 uv0 = { float(c->x) / float(m->texture->getWidth()), float(c->y) / float(m->texture->getHeight()) };
-			vec2 uv1 = { float(c->x + c->width) / float(m->texture->getWidth()), float(c->y + c->height) / float(m->texture->getHeight()) };
+			vec2 uv0 = { float(c->x) / float(m->texture->getWidth()), 1.f - float(c->y) / float(m->texture->getHeight()) };
+			vec2 uv1 = { float(c->x + c->width) / float(m->texture->getWidth()), 1.f - float(c->y + c->height) / float(m->texture->getHeight()) };
 
 			m->batcher->addQuad(xy0, xy1, uv0, uv1);
 

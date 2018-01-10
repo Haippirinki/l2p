@@ -51,12 +51,12 @@ void Batcher::addVertex(const vec2& position, const vec2& uv, const vec4& colorM
 
 void Batcher::addQuad(const vec2& xy0, const vec2& xy1, const vec2& uv0, const vec2& uv1, const vec4& colorMul, const vec3& colorAdd)
 {
-	addVertex({ xy0.x, xy0.y }, { uv0.x, 1.f - uv0.y }, colorMul, colorAdd);
-	addVertex({ xy0.x, xy1.y }, { uv0.x, 1.f - uv1.y }, colorMul, colorAdd);
-	addVertex({ xy1.x, xy0.y }, { uv1.x, 1.f - uv0.y }, colorMul, colorAdd);
-	addVertex({ xy0.x, xy1.y }, { uv0.x, 1.f - uv1.y }, colorMul, colorAdd);
-	addVertex({ xy1.x, xy1.y }, { uv1.x, 1.f - uv1.y }, colorMul, colorAdd);
-	addVertex({ xy1.x, xy0.y }, { uv1.x, 1.f - uv0.y }, colorMul, colorAdd);
+	addVertex({ xy0.x, xy0.y }, { uv0.x, uv0.y }, colorMul, colorAdd);
+	addVertex({ xy0.x, xy1.y }, { uv0.x, uv1.y }, colorMul, colorAdd);
+	addVertex({ xy1.x, xy0.y }, { uv1.x, uv0.y }, colorMul, colorAdd);
+	addVertex({ xy0.x, xy1.y }, { uv0.x, uv1.y }, colorMul, colorAdd);
+	addVertex({ xy1.x, xy1.y }, { uv1.x, uv1.y }, colorMul, colorAdd);
+	addVertex({ xy1.x, xy0.y }, { uv1.x, uv0.y }, colorMul, colorAdd);
 }
 
 void Batcher::addCircle(const vec2& center, float radius, const vec4& colorMul, const vec3& colorAdd)
