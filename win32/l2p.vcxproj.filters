@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{dde6a731-c193-422b-b2a5-f85bb036dc20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{a829525a-d326-4adb-aa55-160788596331}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Render">
+      <UniqueIdentifier>{8a7734e0-9566-4d26-ae5d-2889016d66eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{e8282c13-08ca-4fe2-bc14-9cb18bb96e53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\shaders">
+      <UniqueIdentifier>{0e2af989-f475-4151-8680-e94010cf74fd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GL_3_3.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Application.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\DDSLoader.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\File.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\GameState.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Math.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\MenuState.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\OpenGL.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\State.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\StateMachine.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\TestState.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Batcher.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\World.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\BitmapFont.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\TextRenderer.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Profile.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Util.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Render\Device.cpp">
+      <Filter>common\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\PostProcess.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\KTXLoader.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GL_3_3.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="glcorearb.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="wglext.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Application.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\DDSLoader.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\File.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\GameState.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Math.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\MenuState.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\OpenGL.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\State.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\StateMachine.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\TestState.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Batcher.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\World.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\BitmapFont.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Platform.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\TextRenderer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Profile.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Util.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Render\Device.h">
+      <Filter>common\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\PostProcess.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\KTXLoader.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\shaders\game.fs">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\game.vs">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\postprocess.fs">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\postprocess.vs">
+      <Filter>assets\shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3EEEBAAD-1F4C-4CCF-A2C1-43565A99734D}</ProjectGuid>
+    <RootNamespace>l2p</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(SolutionDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(SolutionDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\common\Application.cpp" />
+    <ClCompile Include="..\common\Batcher.cpp" />
+    <ClCompile Include="..\common\BitmapFont.cpp" />
+    <ClCompile Include="..\common\DDSLoader.cpp" />
+    <ClCompile Include="..\common\File.cpp" />
+    <ClCompile Include="..\common\GameState.cpp" />
+    <ClCompile Include="..\common\KTXLoader.cpp" />
+    <ClCompile Include="..\common\Math.cpp" />
+    <ClCompile Include="..\common\MenuState.cpp" />
+    <ClCompile Include="..\common\OpenGL.cpp" />
+    <ClCompile Include="..\common\PostProcess.cpp" />
+    <ClCompile Include="..\common\Profile.cpp" />
+    <ClCompile Include="..\common\Render\Device.cpp" />
+    <ClCompile Include="..\common\State.cpp" />
+    <ClCompile Include="..\common\StateMachine.cpp" />
+    <ClCompile Include="..\common\TestState.cpp" />
+    <ClCompile Include="..\common\TextRenderer.cpp" />
+    <ClCompile Include="..\common\Util.cpp" />
+    <ClCompile Include="..\common\World.cpp" />
+    <ClCompile Include="GL_3_3.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Platform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\Application.h" />
+    <ClInclude Include="..\common\Batcher.h" />
+    <ClInclude Include="..\common\BitmapFont.h" />
+    <ClInclude Include="..\common\DDSLoader.h" />
+    <ClInclude Include="..\common\File.h" />
+    <ClInclude Include="..\common\GameState.h" />
+    <ClInclude Include="..\common\KTXLoader.h" />
+    <ClInclude Include="..\common\Math.h" />
+    <ClInclude Include="..\common\MenuState.h" />
+    <ClInclude Include="..\common\OpenGL.h" />
+    <ClInclude Include="..\common\Platform.h" />
+    <ClInclude Include="..\common\PostProcess.h" />
+    <ClInclude Include="..\common\Profile.h" />
+    <ClInclude Include="..\common\Render\Device.h" />
+    <ClInclude Include="..\common\State.h" />
+    <ClInclude Include="..\common\StateMachine.h" />
+    <ClInclude Include="..\common\TestState.h" />
+    <ClInclude Include="..\common\TextRenderer.h" />
+    <ClInclude Include="..\common\Util.h" />
+    <ClInclude Include="..\common\World.h" />
+    <ClInclude Include="glcorearb.h" />
+    <ClInclude Include="GL_3_3.h" />
+    <ClInclude Include="wglext.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\shaders\game.fs" />
+    <None Include="..\assets\shaders\game.vs" />
+    <None Include="..\assets\shaders\postprocess.fs" />
+    <None Include="..\assets\shaders\postprocess.vs" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
