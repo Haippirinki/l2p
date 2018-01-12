@@ -21,6 +21,13 @@ namespace
 
 	Application* application = nullptr;
 
+	int64_t getMicroseconds()
+	{
+		timeval tv;
+		gettimeofday(&tv, NULL);
+		return tv.tv_sec * 1000000L + tv.tv_usec;
+	}
+
 	void deinit()
 	{
 		if(application)
@@ -88,7 +95,8 @@ namespace
 		eglQuerySurface(display, surface, EGL_HEIGHT, &height);
 		__android_log_print(ANDROID_LOG_WARN, "native-activity", "surface %d x %d", width, height);
 
-		application = new Application;
+		application = createApplication();
+		application->init();
 	}
 
 	void handleAppCmd(struct android_app* app, int32_t cmd)
@@ -148,6 +156,9 @@ void android_main(struct android_app* app)
 	app->onAppCmd = handleAppCmd;
 	app->onInputEvent = handleInputEvent;
 
+	int64_t startTime = getMicroseconds();
+	int64_t lastUpdateTime = startTime;
+
 	while(true)
 	{
 		int events;
@@ -168,11 +179,15 @@ void android_main(struct android_app* app)
 
 		if(display && surface && context && application)
 		{
+			int64_t time = getMicroseconds();
+
 			int width = ANativeWindow_getWidth(app->window);
 			int height = ANativeWindow_getHeight(app->window);
 
-			application->update((float)width, (float)height);
+			application->update((float)width, (float)height, (time - startTime) * (1.0 / 1000000.0), (time - lastUpdateTime) * (1.0 / 1000000.0));
 			application->render(width, height);
+
+			lastUpdateTime = time;
 
 			eglSwapBuffers(display, surface);
 		}

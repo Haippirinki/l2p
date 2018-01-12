@@ -84,6 +84,9 @@
     <ClCompile Include="..\common\KTXLoader.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\L2PApplication.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GL_3_3.h">
@@ -153,6 +156,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\KTXLoader.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\L2PApplication.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

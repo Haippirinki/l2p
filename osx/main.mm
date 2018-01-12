@@ -4,7 +4,16 @@
 
 #include <common/Application.h>
 
+#include <sys/time.h>
+
 bool g_shouldExit = false;
+
+static int64_t getMicroseconds()
+{
+	timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec * 1000000L + tv.tv_usec;
+}
 
 @interface WindowDelegate : NSObject <NSWindowDelegate>
 {
@@ -83,7 +92,7 @@ int main(int argc, char** argv)
 
 	[NSApp activateIgnoringOtherApps:YES];
 
-	Application* application = new Application;
+	Application* application = createApplication();
 
 	WindowDelegate* windowDelegate = [[WindowDelegate alloc] init];
 	[window setDelegate:windowDelegate];
@@ -104,10 +113,19 @@ int main(int argc, char** argv)
 
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
+	application->init();
+
+	int64_t startTime = getMicroseconds();
+	int64_t lastUpdateTime = startTime;
+
 	while(!g_shouldExit)
 	{
+		int64_t time = getMicroseconds();
+
 		NSRect contentRect = [window contentRectForFrameRect:[window frame]];
-		application->update((int)contentRect.size.width, (int)contentRect.size.height);
+		application->update((int)contentRect.size.width, (int)contentRect.size.height, (time - startTime) * (1.0 / 1000000.0), (time - lastUpdateTime) * (1.0 / 1000000.0));
+
+		lastUpdateTime = time;
 
 		NSRect backingRect = [windowView convertRectToBacking:contentRect];
 		application->render((int)backingRect.size.width, (int)backingRect.size.height);

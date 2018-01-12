@@ -5,6 +5,14 @@
 #include "Application.h"
 
 #include <unistd.h>
+#include <sys/time.h>
+
+static int64_t getMicroseconds()
+{
+	timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec * 1000000L + tv.tv_usec;
+}
 
 namespace Platform
 {
@@ -14,6 +22,10 @@ namespace Platform
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GLKViewDelegate>
 {
 	Application* myApplication;
+
+	bool initialized;
+	int64_t startTime;
+	int64_t lastUpdateTime;
 }
 @property (strong, nonatomic) UIWindow* window;
 @end
@@ -22,7 +34,20 @@ namespace Platform
 
 - (void)glkView:(GLKView*)view drawInRect:(CGRect)rect
 {
-	myApplication->update((int)rect.size.width, (int)rect.size.height);
+	if(!initialized)
+	{
+		myApplication->init();
+
+		startTime = lastUpdateTime = getMicroseconds();
+		initialized = true;
+	}
+
+	int64_t time = getMicroseconds();
+
+	myApplication->update((int)rect.size.width, (int)rect.size.height, (time - startTime) * (1.0 / 1000000.0), (time - lastUpdateTime) * (1.0 / 1000000.0));
+
+	lastUpdateTime = time;
+
 	myApplication->render((int)view.drawableWidth, (int)view.drawableHeight);
 }
 
@@ -57,7 +82,8 @@ namespace Platform
 	[self.window makeKeyAndVisible];
 	
 	Platform::init();
-	myApplication = new Application;
+	myApplication = createApplication();
+	initialized = false;
 
 	return YES;
 }

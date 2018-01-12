@@ -1,33 +1,17 @@
 #pragma once
 
-#include "StateMachine.h"
-
-#include <cstdint>
-
-namespace Render
-{
-	class Device;
-	class SwapChain;
-}
-
 class Application
 {
 public:
-	Application();
-	~Application();
+	virtual ~Application();
 
-	void update(float width, float height);
-	void render(int width, int height);
+	virtual void init() = 0;
+	virtual void update(float width, float height, double t, double dt) = 0;
+	virtual void render(int width, int height) = 0;
 
-	void mouseDown(float x, float y);
-	void mouseUp(float x, float y);
-	void mouseMove(float x, float y);
-
-private:
-	bool m_initialized;
-	Render::Device* m_device;
-	Render::SwapChain* m_swapChain;
-	StateMachine* m_stateMachine;
-	int64_t m_startTime;
-	int64_t m_lastUpdateTime;
+	virtual void mouseDown(float x, float y) = 0;
+	virtual void mouseUp(float x, float y) = 0;
+	virtual void mouseMove(float x, float y) = 0;
 };
+
+Application* createApplication();

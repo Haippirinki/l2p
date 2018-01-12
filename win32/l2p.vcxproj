@@ -82,6 +82,7 @@
     <ClCompile Include="..\common\File.cpp" />
     <ClCompile Include="..\common\GameState.cpp" />
     <ClCompile Include="..\common\KTXLoader.cpp" />
+    <ClCompile Include="..\common\L2PApplication.cpp" />
     <ClCompile Include="..\common\Math.cpp" />
     <ClCompile Include="..\common\MenuState.cpp" />
     <ClCompile Include="..\common\OpenGL.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="..\common\File.h" />
     <ClInclude Include="..\common\GameState.h" />
     <ClInclude Include="..\common\KTXLoader.h" />
+    <ClInclude Include="..\common\L2PApplication.h" />
     <ClInclude Include="..\common\Math.h" />
     <ClInclude Include="..\common\MenuState.h" />
     <ClInclude Include="..\common\OpenGL.h" />

@@ -6,7 +6,15 @@
 
 #include <common/Application.h>
 
-static Application* g_application = nullptr;
+static int64_t s_frequency = 0;
+static Application* s_application = nullptr;
+
+static int64_t getMicroseconds()
+{
+	int64_t counter;
+	QueryPerformanceCounter((LARGE_INTEGER*)&counter);
+	return counter * 1000 / (s_frequency / 1000);
+}
 
 static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -22,18 +30,18 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	case WM_LBUTTONDOWN:
 		SetCapture(hWnd);
 		GetClientRect(hWnd, &rect);
-		g_application->mouseDown((float)(LOWORD(lParam) - rect.left), (float)(HIWORD(lParam) - rect.top));
+		s_application->mouseDown((float)(LOWORD(lParam) - rect.left), (float)(HIWORD(lParam) - rect.top));
 		break;
 
 	case WM_LBUTTONUP:
 		ReleaseCapture();
 		GetClientRect(hWnd, &rect);
-		g_application->mouseUp((float)(LOWORD(lParam) - rect.left), (float)(HIWORD(lParam) - rect.top));
+		s_application->mouseUp((float)(LOWORD(lParam) - rect.left), (float)(HIWORD(lParam) - rect.top));
 		break;
 
 	case WM_MOUSEMOVE:
 		GetClientRect(hWnd, &rect);
-		g_application->mouseMove((float)(LOWORD(lParam) - rect.left), (float)(HIWORD(lParam) - rect.top));
+		s_application->mouseMove((float)(LOWORD(lParam) - rect.left), (float)(HIWORD(lParam) - rect.top));
 		break;
 
 	default:
@@ -114,7 +122,14 @@ int main(int argc, char** argv)
 
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
-	g_application = new Application;
+	s_application = createApplication();
+
+	s_application->init();
+
+	QueryPerformanceFrequency((LARGE_INTEGER*)&s_frequency);
+
+	int64_t startTime = getMicroseconds();
+	int64_t lastUpdateTime = startTime;
 
 	bool shouldExit = false;
 	while(!shouldExit)
@@ -123,9 +138,13 @@ int main(int argc, char** argv)
 		int width = rect.right - rect.left;
 		int height = rect.bottom - rect.top;
 
-		g_application->update((float)width, (float)height);
+		int64_t time = getMicroseconds();
 
-		g_application->render(width, height);
+		s_application->update((float)width, (float)height, (time - startTime) * (1.0 / 1000000.0), (time - lastUpdateTime) * (1.0 / 1000000.0));
+
+		lastUpdateTime = time;
+
+		s_application->render(width, height);
 
 		SwapBuffers(hDC);
 
@@ -143,7 +162,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	delete g_application;
+	delete s_application;
 
 	wglMakeCurrent(0, 0);
 	wglDeleteContext(hRC);
