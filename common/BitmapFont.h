@@ -6,6 +6,9 @@
 class BitmapFont
 {
 public:
+	#pragma pack(push)
+	#pragma pack(1)
+
 	struct Character
 	{
 		uint32_t id;
@@ -19,6 +22,8 @@ public:
 		uint8_t page;
 		uint8_t chnl;
 	};
+
+	#pragma pack(pop)
 
 	BitmapFont();
 	~BitmapFont();

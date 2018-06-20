@@ -7,7 +7,9 @@
 
 struct BitmapFont::PrivateData
 {
+	#pragma pack(push)
 	#pragma pack(1)
+
 	struct InfoBlock
 	{
 		int16_t fontSize;
@@ -24,7 +26,6 @@ struct BitmapFont::PrivateData
 		uint8_t outline;
 	};
 
-	#pragma pack(1)
 	struct CommonBlock
 	{
 		uint16_t lineHeight;
@@ -39,13 +40,14 @@ struct BitmapFont::PrivateData
 		uint8_t blueChnl;
 	};
 
-	#pragma pack(1)
 	struct KerningPair
 	{
 		uint32_t first;
 		uint32_t second;
 		int16_t amount;
 	};
+
+	#pragma pack(pop)
 
 	InfoBlock infoBlock;
 	std::string fontName;
