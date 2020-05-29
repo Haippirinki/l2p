@@ -27,6 +27,7 @@ public:
 	void setControl(const vec2& control);
 
 	State getState() const;
+	bool isPortalOpen() const;
 
 private:
 	struct PrivateData;
